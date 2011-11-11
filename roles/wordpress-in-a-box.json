@@ -1,0 +1,15 @@
+{
+  "name": "wordpress-in-a-box",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "description": "A all-in-one webserver customised for hosting wordpress",
+  "run_list": [
+    "recipe[nginx::install_from_package]",
+    "recipe[mysql]",
+    "recipe[rsync]"
+  ],
+  "override_attributes": {
+  },
+  "default_attributes": {
+  }
+}

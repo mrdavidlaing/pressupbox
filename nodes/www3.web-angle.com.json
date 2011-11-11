@@ -1,6 +1,6 @@
 {
     "ipaddress": "10.195.94.152",
     "run_list": [
-        "recipe[nginx::install_from_package]"
+        "role[wordpress-in-a-box]"
     ]
 }
