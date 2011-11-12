@@ -6,10 +6,18 @@
   "run_list": [
     "recipe[nginx::install_from_package]",
     "recipe[mysql]",
+    "recipe[php5::default]",
+    "recipe[php5::fpm]",
+    "recipe[php5::fpmenable_nginx]",
     "recipe[rsync]"
   ],
   "override_attributes": {
   },
   "default_attributes": {
+    "php5_fpm" : {
+       "tunable" : {
+          "max_children": 2
+        } 
+    }
   }
 }
