@@ -2,3 +2,5 @@ Attach data volume
 add to /etc/fstab
 /dev/sdf	/data	auto	defaults,nobootwait,comment=cloudconfig	0	0
 
+
+NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
