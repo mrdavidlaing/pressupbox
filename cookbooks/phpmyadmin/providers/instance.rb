@@ -46,7 +46,7 @@ tar -zxf #{tar_path} --strip-components=1 -C #{home}
 
   bash "Create phpmyadmin database and tables" do
     code <<-EOF
-mysql < #{::File.join(home, "scripts", "create_tables.sql")}
+mysql -u root -p"#{node['mysql']['server_root_password']}" < #{::File.join(home, "scripts", "create_tables.sql")}
     EOF
   end
 
