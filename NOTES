@@ -1,0 +1,4 @@
+Attach data volume
+add to /etc/fstab
+/dev/sdf	/data	auto	defaults,nobootwait,comment=cloudconfig	0	0
+

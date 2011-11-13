@@ -9,6 +9,15 @@ server {
 }
 <% end -%>
 
+# Upstream to abstract backend connection(s) for php
+upstream php {
+<% if node[:php5_fpm][:listen] == "socket" -%>
+    server   unix:<%= node[:php5_fpm][:listen_socket] %>;
+<% else %>
+    server   <%= node[:php5_fpm][:listen_ip] %>:<%= node[:php5_fpm][:listen_port] %>;
+<% end -%>
+}
+
 server {
   listen 80;
   server_name <%= @params[:fqdn] %>;
@@ -16,11 +25,8 @@ server {
   access_log <%= node[:nginx][:log_dir] %>/<%= @params[:fqdn] %>-access.log;
   error_log <%= node[:nginx][:log_dir] %>/<%= @params[:fqdn] %>-error.log;
 
-  root <%= node[:nginx][:content_dir] %>/<%= @params[:fqdn] %>/htdocs/;
-
-  error_page 503 /system/maintenance.html;
-  if (-f $document_root/system/maintenance.html$nocycle) { set $nocycle 1; return 503; }
-  location = /system/maintenance.html { }
+  root <%= node[:nginx][:content_dir] %>/<%= @params[:fqdn] %>/httpdocs/;
+  client_max_body_size 128M;
 
   location = /favicon.ico {
     log_not_found off;
@@ -34,14 +40,22 @@ server {
   }
 
   location / {
-    index index.html;
+     # This is cool because no php is touched for static content
+     try_files $uri $uri/ /index.php;
+  }
+
+  location ~ \.php$ {
+     #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+     include /etc/nginx/fastcgi_params;
+     fastcgi_intercept_errors on;
+     fastcgi_pass php;
   }
 
   location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-    expires max;
-    log_not_found off;
+     expires max;
+     log_not_found off;
   }
-
+  
   include <%= node[:nginx][:dir] %>/sites-available/<%= @params[:fqdn] %>.d/*.conf;
   include <%= node[:nginx][:content_dir] %>/<%= @params[:fqdn] %>/nginx_config/*.conf;
 }
