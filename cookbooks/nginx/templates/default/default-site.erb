@@ -1,12 +1,3 @@
-# Upstream to abstract backend connection(s) for php
-upstream php {
-<% if node[:php5_fpm][:listen] == "socket" -%>
-    server   unix:<%= node[:php5_fpm][:listen_socket] %>;
-<% else %>
-    server   <%= node[:php5_fpm][:listen_ip] %>:<%= node[:php5_fpm][:listen_port] %>;
-<% end -%>
-}
-
 server {
   listen 80;
   server_name <%= node[:hostname] %>;
