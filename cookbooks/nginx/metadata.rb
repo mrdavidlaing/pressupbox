@@ -15,6 +15,7 @@ recipe "nginx::setup_stats","Configure collectd stat collection for the nginx se
 recipe "nginx::setup_server", "Only intended to be included by nginx::source and nginx::default.  Does the common configuration for any installation type."
 recipe "nginx::setup_reverse_proxy","Sets nginx up as a reverse proxy for http or https"
 recipe "nginx::setup_vhost","Sets up a basic vhost directory and configuration"
+recipe "nginx::setup_add-vhosts-in-data","Enables all vhosts defined in /data/www/vhost/*/nginx/*.conf"
 
 %w{ ubuntu debian centos rhel }.each do |os|
   supports os

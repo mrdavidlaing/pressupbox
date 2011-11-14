@@ -5,6 +5,7 @@
   "description": "A all-in-one webserver customised for hosting wordpress",
   "run_list": [
     "recipe[nginx::install_from_package]",
+    "recipe[nginx::setup_add-vhosts-in-data]",
     "recipe[mysql::server]",
     "recipe[php5::default]",
     "recipe[php5::fpm]",

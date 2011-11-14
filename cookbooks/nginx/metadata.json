@@ -428,6 +428,7 @@
   },
   "recipes": {
     "nginx::setup_server": "Only intended to be included by nginx::source and nginx::default.  Does the common configuration for any installation type.",
+    "nginx::setup_add-vhosts-in-data": "Enables all vhosts defined in /data/www/vhost/*/nginx/*.conf",
     "nginx::setup_ssl_reverse_proxy": "Sets nginx up as a reverse proxy for ssl",
     "nginx::setup_stats": "Configure collectd stat collection for the nginx server. Intended to work with RightScale monitoring services.",
     "nginx::setup_vhost": "Sets up a basic vhost directory and configuration",

@@ -4,3 +4,7 @@ add to /etc/fstab
 
 
 NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+
+ /etc/nginx/sites-available/all-vhosts.conf 
+include /data/www/vhosts/*/nginx/*.conf;
+
