@@ -26,7 +26,7 @@ EOF
   e.run_action(:run)
 end
 
-%w{php5-cgi php5-cli smarty php-pear}.each do |pkgs|
+%w{php5-cgi php5-cli smarty php-pear php-apc}.each do |pkgs|
   package pkgs do
     action :upgrade
   end
