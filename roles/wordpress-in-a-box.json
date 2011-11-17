@@ -27,9 +27,11 @@
     },
     "php5_fpm" : {
        "tunable" : {
-          "max_children": 5,
-          "min_spare": 2,
-          "max_spare": 4
+          "max_children": 60,
+          "start_servers": 10,
+          "min_spare": 10,
+          "max_spare": 20,
+          "max_requests": 1000
         } 
     },
     "phpmyadmin": {
