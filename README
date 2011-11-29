@@ -1,0 +1,19 @@
+#Pre-requisits
+
+* Ubuntu 10.04 machine
+
+## Setting up an Ubuntu dev machine using Virtual Box
+
+* Download VirtualBox - https://www.virtualbox.org/wiki/Downloads
+* Install Ubuntu 10.04 LTS server edition (32 or 64bit) - https://help.ubuntu.com/community/Installation/MinimalCD
+* Do not install any additional packages on Ubuntu; the wordpress-in-a-box scripts will do all this for you
+
+# Configuring a machine
+1. SSH into your Ubuntu machine
+1. sudo apt-get install git-core python-pip python-dev
+1. sudo pip install littlechef
+1. cd ~
+1. git clone git://github.com/mrdavidlaing/wordpress-in-a-box.git
+1. 
+
+
