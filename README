@@ -17,7 +17,8 @@
 
 # Configuring a machine
 1. SSH into your Ubuntu machine
-1. sudo apt-get install git-core python-pip python-dev
+1. sudo apt-get update
+1. sudo apt-get install git-core python-pip python-dev   (pip must be >1.0, check with pip --version)
 1. sudo pip install littlechef
 1. cd ~
 1. git clone git://github.com/mrdavidlaing/wordpress-in-a-box.git
