@@ -6,7 +6,9 @@
 
 * Download VirtualBox - https://www.virtualbox.org/wiki/Downloads
 * Install Ubuntu 10.04 LTS server edition (32 or 64bit) - https://help.ubuntu.com/community/Installation/MinimalCD
+* Change the network mode to "Bridged adapter"
 * Do not install any additional packages on Ubuntu; the wordpress-in-a-box scripts will do all this for you
+* install SSH - sudo apt-get install ssh
 
 # Configuring a machine
 1. SSH into your Ubuntu machine
