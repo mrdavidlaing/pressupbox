@@ -13,15 +13,20 @@
   * vi ~/.authorized_keys  - then add your public key
   * chmod 600 .ssh/authorized_keys
   * chmod 700 .ssh
-  * optional - configure your workstation's ~/.ssh/ssh_config to use the correct username & private key file
+  * optional - configure your workstation's ~/.ssh/config to use the correct username & private key file
 
-# Configuring a machine
+# Configuring your cluster controller machine
 1. SSH into your Ubuntu machine
 1. sudo apt-get update
 1. sudo apt-get install git-core python-pip python-dev   (pip must be >1.0, check with pip --version)
 1. sudo pip install littlechef paramiko
 1. cd ~
 1. git clone git://github.com/mrdavidlaing/wordpress-in-a-box.git
-1. 
+
+# Preparing a node
+1. Edit your ~/.ssh/config so you can ssh <nodename> as root, or a sudoers user
+1. from wordpress-in-a-box  -  fix node:<nodename> deploy_chef
+1. from wordpress-in-a-box  -  fix node:<nodename> role:wordpress-in-a-box
+
 
 
