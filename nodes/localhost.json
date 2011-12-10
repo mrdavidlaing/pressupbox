@@ -1,0 +1,6 @@
+{
+    "ipaddress": "127.0.0.1",
+    "run_list": [
+        "role[wordpress-in-a-box]"
+    ]
+}
