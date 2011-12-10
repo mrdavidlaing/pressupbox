@@ -8,6 +8,8 @@ NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
  /etc/nginx/sites-available/all-vhosts.conf 
 include /data/www/vhosts/*/nginx/*.conf;
 
+/etc/nginx/fastcgi_params seems to require the HTTPS line to be commented out
+#fastcgi_param  HTTPS                   $server_https;
 
 When changing location of mysql data, also update 
 sudo vi /etc/apparmor.d/usr.sbin.mysqld 
