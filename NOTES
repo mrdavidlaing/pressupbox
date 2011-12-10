@@ -19,4 +19,6 @@ sudo vi /etc/apparmor.d/usr.sbin.mysqld
   /var/lib/mysql/ r,
   /var/lib/mysql/** rwk,
 
+Make sure that /data/mysql is chowned mysql:mysql
+
 
