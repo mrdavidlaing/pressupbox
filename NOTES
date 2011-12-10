@@ -11,6 +11,8 @@ include /data/www/vhosts/*/nginx/*.conf;
 /etc/nginx/fastcgi_params seems to require the HTTPS line to be commented out
 #fastcgi_param  HTTPS                   $server_https;
 
+In ubuntu 11.10, the php5-fpm config file is /etc/php5/fpm/php-fpm.conf (not main.conf)
+
 When changing location of mysql data, also update 
 sudo vi /etc/apparmor.d/usr.sbin.mysqld 
 
@@ -21,4 +23,4 @@ sudo vi /etc/apparmor.d/usr.sbin.mysqld
 
 Make sure that /data/mysql is chowned mysql:mysql
 
-
+make sure that /data/mysql contains everything from /var/lib/mysql

@@ -30,7 +30,7 @@ service "php5-fpm" do
   action [:enable, :start]
 end
 
-template "/etc/php5/fpm/main.conf" do
+template "/etc/php5/fpm/php-fpm.conf" do
   source "php5-fpm.conf.erb"
   backup false
   variables(:listen_str => listen_str)
