@@ -54,6 +54,14 @@ if platform?(%w{debian ubuntu})
     group "root"
     mode "0600"
   end
+  
+  #ensure that apparmor allows mysqld access to the required folders
+  template "/etc/apparmor.d/usr.sbin.mysqld" do
+    source "usr.sbin.mysqld.erb"
+    owner "root"
+    group "root"
+    mode "0644"
+  end
 
 end
 
