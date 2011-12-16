@@ -82,7 +82,7 @@ template "nginx.conf" do
   owner "root"
   group "root"
   mode 0644
-  backup false
+  backup true
 end
 
 if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('0.9.0')

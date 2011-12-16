@@ -46,6 +46,19 @@ http {
   <% end -%>
   }
 
+  ##
+  # If HTTPS, then set a variable so it can be passed along.
+  ##
+    
+  map $scheme $server_https {
+  	default off;
+  	https on;
+  }
+
+  ##
+  # Virtual Host Configs
+  ##
+
   include <%= node[:nginx][:dir] %>/conf.d/*.conf;
   include <%= node[:nginx][:dir] %>/sites-enabled/*;
 }
