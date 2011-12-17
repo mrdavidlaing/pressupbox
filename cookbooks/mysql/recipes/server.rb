@@ -82,7 +82,14 @@ skip_federated = case node['platform']
                  end
 
 if platform?("ubuntu") && node['mysql']['data_dir'] != "/var/lib/mysql"
-  
+    
+    service "apparmor" do
+      service_name "apparmor"
+      restart_command "restart apparmor"
+      supports :restart => true
+      action :nothing
+    end
+
     service "mysql" do
         action :stop
     end
