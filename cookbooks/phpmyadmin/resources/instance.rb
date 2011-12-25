@@ -14,4 +14,4 @@
 actions :create
 
 attribute :home, :kind_of => String, :required => true, :name_attribute => true
-attribute :version, :kind_of => String, :default => "3.4.2"
+attribute :version, :kind_of => String, :default => "3.4.8"

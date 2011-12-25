@@ -54,7 +54,7 @@ if platform?(%w{debian ubuntu})
     group "root"
     mode "0600"
   end
-
+  
 end
 
 package "mysql-server" do
@@ -80,6 +80,43 @@ skip_federated = case node['platform']
                  else
                    false
                  end
+
+if platform?("ubuntu") && node['mysql']['data_dir'] != "/var/lib/mysql"
+    
+    service "apparmor" do
+      service_name "apparmor"
+      restart_command "restart apparmor"
+      supports :restart => true
+      action :nothing
+    end
+
+    service "mysql" do
+        action :stop
+    end
+    
+    directory node['mysql']['data_dir'] do
+        owner "root"
+        group "root"
+        action :create
+        not_if do FileTest.directory?(node['mysql']['data_dir']) end
+    end
+    
+    execute "move mysql data folder" do
+        command "mv /var/lib/mysql #{node['mysql']['data_dir']}"
+        not_if do FileTest.directory?(node['mysql']['data_dir']) end
+    end
+
+    Chef::Log.info("Ensuring that apparmor allows mysqld access to the required folders")
+    template "/etc/apparmor.d/usr.sbin.mysqld" do
+        source "usr.sbin.mysqld.erb"
+        owner "root"
+        group "root"
+        mode "0644"
+        notifies :restart, resources(:service => "apparmor"), :immediately
+        backup 1
+    end
+    
+end
 
 template "#{node['mysql']['conf_dir']}/my.cnf" do
   source "my.cnf.erb"
