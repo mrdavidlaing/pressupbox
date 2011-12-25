@@ -1,7 +1,36 @@
-Attach data volume
-add to /etc/fstab
+Manual setup steps:
+1.  sudo vi ~/.ssh/config 
+
+Host www4.web-angle.com
+User ubuntu
+IdentityFile /Users/mrdavidlaing/.ssh/web-angle-EU-West1.pem
+
+2.  Attach a data volume at /data
+
+mkdir /data
+
+sudo vi /etc/fstab
+
 /dev/sdf	/data	auto	defaults,nobootwait,comment=cloudconfig	0	0
 
+3.  Change hostname
+  sudo vi /etc/hostname
+  sudo vi /etc/hosts
+  sudo service hostname start
+
+4.  fix node:www4.web-angle.com deploy_chef
+5.  fix node:www4.web-angle.com role:wordpress-in-a-box
+
+5.1  Move mysql folder
+   sudo mv /var/lib/mysql /data
+   ensure /etc/mysql/my.cnf datadir=/data/mysql
+   sudo service mysql start
+      ensure -> mysql start/running, process 1562
+
+
+
+
+--------
 
 NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
 

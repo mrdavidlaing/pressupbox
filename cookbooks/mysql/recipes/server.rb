@@ -64,12 +64,14 @@ end
 service "mysql" do
   service_name value_for_platform([ "centos", "redhat", "suse", "fedora" ] => {"default" => "mysqld"}, "default" => "mysql")
   if (platform?("ubuntu") && node.platform_version.to_f >= 10.04)
+    provider Chef::Provider::Service::Upstart
     restart_command "restart mysql"
     stop_command "stop mysql"
     start_command "start mysql"
   end
-  supports :status => true, :restart => true, :reload => true
-  action :nothing
+  supports  :start => true, :stop => true, :status => true, :restart => true, :reload => true
+  action [:enable, :start]
+
 end
 
 skip_federated = case node['platform']
@@ -115,7 +117,10 @@ if platform?("ubuntu") && node['mysql']['data_dir'] != "/var/lib/mysql"
         notifies :restart, resources(:service => "apparmor"), :immediately
         backup 1
     end
-    
+
+    service "mysql" do
+        action :start
+    end
 end
 
 template "#{node['mysql']['conf_dir']}/my.cnf" do
@@ -162,6 +167,11 @@ rescue
     action :create
   end
 end
+
+service "mysql" do
+   action :start
+end
+
 
 execute "mysql-install-privileges" do
   command "/usr/bin/mysql -u root #{node['mysql']['server_root_password'].empty? ? '' : '-p' }#{node['mysql']['server_root_password']} < #{grants_path}"
