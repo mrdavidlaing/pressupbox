@@ -11,7 +11,8 @@
     "recipe[php5::fpm]",
     "recipe[php5::fpmenable_nginx]",
     "recipe[phpmyadmin::install]",
-    "recipe[rsync]"
+    "recipe[rsync]",
+    "recipe[postfix]"
   ],
   "override_attributes": {
     "mysql": {
