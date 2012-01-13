@@ -9,7 +9,7 @@ IdentityFile /Users/mrdavidlaing/.ssh/web-angle-EU-West1.pem
 
 mkdir /data
 fdisk -l
-mke2fs -t ext4 /dev/xvdf
+mke2fs -N 4000000 -t ext4 /dev/xvdf
 vi /etc/fstab 
    /dev/xvdf /data	auto	defaults,nobootwait,comment=cloudconfig	0	0
 
