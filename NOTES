@@ -57,7 +57,7 @@ sudo vi /etc/apache2/sites-available/default
         </Location>
 
 7.  Install NodeJs
-  (also installs cloud9 ide to  /tmp/node-install/node-v0.6.5/
+  (also installs cloud9 ide to  /tmp/node-install/node-v0.6.5/cloud9
   need: sudo apt-get install libssl0.9.8
 
 8.  Setup SSH tunnel (using blowfish encryption, which is slightly less secure but less CPU intensive)
