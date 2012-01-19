@@ -13,11 +13,7 @@ recipe            "mysql::server_ec2", "Performs EC2-specific mountpoint manipul
   supports os
 end
 
-%w{ mysql openssl }.each do |gemname|
-  depends gemname
-end
-
-depends ""
+depends "openssl"
 
 attribute "mysql/server_root_password",
   :display_name => "MySQL Server Root Password",
