@@ -1,0 +1,42 @@
+{
+  "name": "pressupbox-dev",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "description": "Pressupbox - Development version",
+  "run_list": [
+    "recipe[nginx::install_from_package]",
+    "recipe[nginx::setup_add-vhosts-in-data]",
+    "recipe[mysql::server]",
+    "recipe[php5::default]",
+    "recipe[php5::fpm]",
+    "recipe[php5::fpmenable_nginx]",
+    "recipe[phpmyadmin::install]",
+    "recipe[rsync]",
+    "recipe[postfix]"
+  ],
+  "override_attributes": {
+    "mysql": {
+       "server_root_password": "QzEoS8z4UjN0dIQArowX"
+    }
+  },
+  "default_attributes": {
+    "ec2": {
+    },
+    "php5" : {
+       "module_list": "mysql gd",
+       "server_usage": "dedicated"
+    },
+    "php5_fpm" : {
+       "tunable" : {
+          "max_children": 60,
+          "start_servers": 10,
+          "min_spare": 10,
+          "max_spare": 20,
+          "max_requests": 1000
+        } 
+    },
+    "phpmyadmin": {
+      "home": "/var/www/phpmyadmin"
+    }
+  }
+}
