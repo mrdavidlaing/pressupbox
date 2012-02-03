@@ -17,7 +17,8 @@
   "override_attributes": {
     "mysql": {
        "data_dir" : "/data/mysql",
-       "server_root_password": "QzEoS8z4UjN0dIQArowX"
+       "server_root_password": "QzEoS8z4UjN0dIQArowX",
+       "bind-address": "127.0.0.1"
     }
   },
   "default_attributes": {
