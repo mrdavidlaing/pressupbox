@@ -96,17 +96,6 @@ apps.each do |app_name|
      mode 0755
   end
   
-
-  #Setup a var/logs folder
-  # %w{var var/log}.each do |dir|
-  #   directory "#{home_dir}/#{dir}" do
-  #      action :create
-  #      owner admin_user
-  #      group www_user
-  #      mode 0770
-  #   end
-  # end
-
   #The WWW folders should be +rw for admin_user & www_user, and +r for all
   directory "#{home_dir}/www" do
      action :create
@@ -115,27 +104,28 @@ apps.each do |app_name|
      mode 0775
   end
 
+  # make a custom help file
+  template "#{home_dir}/help.txt" do
+    source "help.txt.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:admin_user => admin_user, :www_user => www_user)
+    mode 0644
+  end
+
 # ==================
 #  Setup app apache
 # ==================
   # Create links to apache control programs
   %w{apache2ctl a2ensite a2dissite a2enmod a2dismod}.each do |cmd|
-    link "#{home_dir}/bin/#{cmd}" do
+    link "#{home_dir}/bin/#{cmd}-#{app_name}" do
       to "/usr/sbin/#{cmd}"
     end
   end
 
   link "/etc/apache2-#{app_name}" do
       to "#{home_dir}/etc/apache2"
-  end
-
-  template "/etc/init.d/apache2-#{app_name}" do
-    source "initd-apache2-instancename.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:instance_name => app_name)
-    mode 0755
   end
 
   template "#{home_dir}/etc/apache2/envvars" do
@@ -147,6 +137,38 @@ apps.each do |app_name|
     mode 0640
   end
 
+  # setup as separate service 
+  template "/etc/init.d/apache2-#{app_name}" do
+    source "initd-apache2-instancename.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:instance_name => app_name)
+    mode 0755
+  end
+  
+  # enable minimal set of mods
+  %w{mime authz_host dir status rewrite php5}.each do |mod|
+    execute "a2enmod-#{app_name} #{mod}" do 
+      command "#{home_dir}/bin/a2enmod-#{app_name} #{mod}" 
+      action :run
+    end
+  end
+
+  execute "enable_default_site" do
+    command "#{home_dir}/bin/a2ensite-#{app_name} default"
+    action :run
+  end
+
+  service "apache2-#{app_name}" do
+    supports :status => true, :restart => true, :reload => true
+    action [ :enable, :start ]
+  end
+
 end
- 
+
+# Disable non app specific apache2
+service "apache2" do
+  action [:stop, :disable ]
+end
 

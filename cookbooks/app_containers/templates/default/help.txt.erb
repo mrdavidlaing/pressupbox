@@ -1,0 +1,21 @@
+________                               _____  __             
+___  __ \_____________ __________________  / / /________        .--_....._-------,
+__  /_/ /__  ___/_  _ \__  ___/__  ___/_  / / / ___  __ \      / .'       '.    /|
+_  ____/ _  /    /  __/_(__  ) _(__  ) / /_/ /  __  /_/ /     / /   B O X   \  / |
+/_/      /_/     \___/ /____/  /____/  \____/   _  .___/     /  '._       _.' /  |
+                                                /_/         /      ```````   /  / 
+                                                            |----------------| /
+                                                            |                |/
+                                                            '----------------'
+Welcome <%= @admin_user %>
+
+Available commands:
+* Configure your apache2 server
+  $ sudo bin/apache2ctl-<%= @admin_user %>
+* Enable / disable a virtual host
+  $ sudo bin/a2ensite-<%= @admin_user %> {vhost_name} 
+  $ sudo bin/a2disite-<%= @admin_user %> {vhost_name} 
+* Enable / disable apache2 module
+  $ sudo bin/a2enmod-<%= @admin_user %> {module_name} 
+  $ sudo bin/a2dismod-<%= @admin_user %> {module_name} 
+
