@@ -1,0 +1,8 @@
+{
+ "id": "bidvoices",
+ "id_int": 9001,
+ "authorized_keys" : [
+ 	"key1",
+ 	"key2"
+ ]
+}
