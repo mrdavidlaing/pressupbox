@@ -1,8 +1,8 @@
-<VirtualHost *:9001>
+<VirtualHost *:${APACHE_PORT}>
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /data/app_containers/forsitethemes/www
-	<Directory /data/app_containers/forsitethemes/www/ >
+	DocumentRoot ${APP_HOME_DIR}/www
+	<Directory ${APP_HOME_DIR}/www/ >
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
 		Order allow,deny

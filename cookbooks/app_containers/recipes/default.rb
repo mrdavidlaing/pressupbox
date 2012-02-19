@@ -134,6 +134,15 @@ apps.each do |app_name|
     mode 0755
   end
 
+  template "#{home_dir}/etc/apache2/envvars" do
+    source "apache2-envvars.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:port =>app['uid'], :home_dir => home_dir, :user => www_user, :group => www_user)
+    mode 0640
+  end
+
 end
  
 
