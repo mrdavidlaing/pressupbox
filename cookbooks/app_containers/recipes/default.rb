@@ -18,29 +18,33 @@ end
 apps.each do |app_name|
   
   app = data_bag_item('apps', app_name)
-  Chef::Log.info "Creating container for app: #{app['id']}"
+  Chef::Log.info "Creating container for app: #{app_name}"
   
-  home_dir = "/data/app_containers/#{app['id']}"
-  admin_user = "#{app['id']}"
-  www_user = "#{app['id']}_www"
+  home_dir = "/data/app_containers/#{app_name}"
+  admin_user = "#{app_name}"
+  admin_user_uid = app['id_int']
+  www_user = "#{app_name}_www"
+  www_user_uid = app['id_int'] + 10000
+  www_user_gid = app['id_int']
+  port = app['id_int']
    
   group(www_user) do
-    gid app['gid']
+    gid www_user_gid
   end
 
   user(admin_user) do
-    uid       app['uid']
-    gid       app['gid']
-    comment   "#{app['id']} admin user"
+    uid       admin_user_uid
+    gid       www_user_gid
+    comment   "#{app_name} admin user"
  
     home      home_dir
     supports  :manage_home => true
   end
 
   user(www_user) do
-    uid       app['uid']+10000
-    gid       app['gid']
-    comment   "#{app['id']} www/service user"
+    uid       www_user_uid
+    gid       www_user_gid
+    comment   "#{app_name} www/service user"
     
     supports  :manage_home => false
   end
@@ -121,16 +125,16 @@ apps.each do |app_name|
     end
   end
 
-  link "/etc/apache2-#{app['id']}" do
+  link "/etc/apache2-#{app_name}" do
       to "#{home_dir}/etc/apache2"
   end
 
-  template "/etc/init.d/apache2-#{app['id']}" do
+  template "/etc/init.d/apache2-#{app_name}" do
     source "initd-apache2-instancename.erb"
     action :create
     owner "root"
     group "root"
-    variables(:instance_name => app['id'])
+    variables(:instance_name => app_name)
     mode 0755
   end
 
@@ -139,7 +143,7 @@ apps.each do |app_name|
     action :create
     owner "root"
     group "root"
-    variables(:port =>app['uid'], :home_dir => home_dir, :user => www_user, :group => www_user)
+    variables(:port => port, :home_dir => home_dir, :user => www_user, :group => www_user)
     mode 0640
   end
 
