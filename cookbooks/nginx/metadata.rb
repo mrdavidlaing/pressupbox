@@ -1,12 +1,8 @@
-maintainer        "Ryan J. Geyer"
-maintainer_email  "me@ryangeyer.com"
+maintainer        "David Laing"
+maintainer_email  "david@davidlaing.com"
 license           "Apache 2.0"
-description       "Originally forked from and inspired by the opscode nginx cookbook, but subsequently tweaked and hacked to no longer represent it. https://github.com/opscode/cookbooks/tree/master/nginx"
-version           "0.0.1"
-
-depends "utils"
-depends "rs_utils"
-depends "skeme"
+description       "Originally forked from and inspired by the Ryan Geyer's cookbook"
+version           "0.0.2"
 
 recipe "nginx::install_from_package", "Installs nginx package and sets up configuration with Debian apache style with sites-enabled/sites-available"
 recipe "nginx::install_from_source", "Installs nginx from source and sets up configuration with Debian apache style with sites-enabled/sites-available"
@@ -21,9 +17,9 @@ recipe "nginx::setup_add-vhosts-in-data","Enables all vhosts defined in /data/ww
   supports os
 end
 
-%w{ build-essential runit rs_utils }.each do |cb|
-  depends cb
-end
+# %w{ build-essential runit rs_utils }.each do |cb|
+#   depends cb
+# end
 
 attribute "nginx/dir",
   :display_name => "Nginx Directory",
