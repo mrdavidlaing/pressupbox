@@ -1,4 +1,3 @@
-# require_recipe 'ruby-shadow'
 Chef::Log.info "making containers"
 
 # Load the keys of the items in the 'admins' data bag

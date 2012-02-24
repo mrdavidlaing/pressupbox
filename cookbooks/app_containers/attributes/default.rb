@@ -12,8 +12,8 @@ groups[:admin] = {:gid => 7000}
 
 # passwords must be in shadow password format with a salt. To generate: openssl passwd -1
 
-users[:jose] = {:password => "shadowpass", :comment => "José Amador", :uid => 4001, :group => :admin}
-users[:francisco]   = {:password => "shadowpass", :comment => "Paco de Lucena",  :uid => 4002, :group => :admin}
+# users[:jose] = {:password => "shadowpass", :comment => "José Amador", :uid => 4001, :group => :admin}
+# users[:francisco]   = {:password => "shadowpass", :comment => "Paco de Lucena",  :uid => 4002, :group => :admin}
 
-ssh_keys[:jose]   = "ssh-dss keydata"
-ssh_keys[:francisco]  = "ssh-rsa keydata"
+# ssh_keys[:jose]   = "ssh-dss keydata"
+# ssh_keys[:francisco]  = "ssh-rsa keydata"
