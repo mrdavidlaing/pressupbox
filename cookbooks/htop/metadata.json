@@ -1,11 +1,13 @@
 {
-  "name": "app_containers",
-  "description": "Configure hosting container for webapps",
+  "name": "htop",
+  "description": "Install htop - better top",
   "long_description": "",
   "maintainer": "David Laing",
   "maintainer_email": "david@davidlaing.com",
-  "license": "Apache v2.0",
+  "license": "Apache 2.0",
   "platforms": {
+    "ubuntu": ">= 0.0.0",
+    "debian": ">= 0.0.0"
   },
   "dependencies": {
   },
@@ -25,5 +27,5 @@
   },
   "recipes": {
   },
-  "version": "0.1.0"
+  "version": "0.0.1"
 }
