@@ -113,8 +113,3 @@ nginx_site "default" do
   enable false
 end
 
-nginx_enable_vhost node.hostname do
-  template "default-site.erb"
-  create_doc_root false
-end
-

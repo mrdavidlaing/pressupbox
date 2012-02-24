@@ -37,15 +37,6 @@ http {
 
   server_names_hash_bucket_size <%= node[:nginx][:server_names_hash_bucket_size] %>;
 
-  # Upstream to abstract backend connection(s) for php
-  upstream php {
-  <% if node[:php5_fpm][:listen] == "socket" -%>
-      server   unix:<%= node[:php5_fpm][:listen_socket] %>;
-  <% else %>
-      server   <%= node[:php5_fpm][:listen_ip] %>:<%= node[:php5_fpm][:listen_port] %>;
-  <% end -%>
-  }
-
   ##
   # If HTTPS, then set a variable so it can be passed along.
   ##
@@ -55,10 +46,10 @@ http {
   	https on;
   }
 
+  include <%= node[:nginx][:dir] %>/conf.d/*.conf;
+
   ##
   # Virtual Host Configs
   ##
-
-  include <%= node[:nginx][:dir] %>/conf.d/*.conf;
   include <%= node[:nginx][:dir] %>/sites-enabled/*;
 }

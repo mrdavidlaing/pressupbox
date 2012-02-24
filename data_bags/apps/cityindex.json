@@ -1,0 +1,12 @@
+{
+ "id": "cityindex",
+ "id_int": 9002,
+ "authorized_keys" : [
+ 	"key1",
+ 	"key2"
+ ],
+ "aliases": [
+ 	"labs.cityindex.com",
+ 	"www.labs.cityindex.com"
+ ]
+}

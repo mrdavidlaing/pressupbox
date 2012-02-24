@@ -1,0 +1,64 @@
+upstream proxy_<%= @params[:app_name] %> {
+  ip_hash;
+  server 127.0.0.1:<%= @params[:port] %>;
+}
+
+server {
+  listen 80;
+  server_name <% @params[:aliases].each do |a| -%><%= " #{a}" %><% end -%>;
+
+  access_log <%= @params[:log_dir] %>/<%= @params[:app_name] %>-access.log;
+  error_log <%= @params[:log_dir] %>/<%= @params[:app_name] %>-error.log;
+
+  location @proxy {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+
+    proxy_pass http://proxy_<%= @params[:app_name] %>;
+  }
+
+  # Set proxy headers for the passthrough
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+  # Let the Set-Cookie header through.
+    proxy_pass_header Set-Cookie;
+
+  # Catch the wordpress cookies.
+    # Must be set to blank first for when they don't exist.
+  set $wordpress_auth "";
+  if ($http_cookie ~* "wordpress_logged_in_[^=]*=([^%]+)%7C") {
+    set $wordpress_auth wordpress_logged_in_$1;
+  }
+
+  # Set the proxy cache key
+  set $cache_key $scheme$host$uri$is_args$args;
+
+  # Don't cache these pages.
+  location ~* ^/(wp-admin|wp-login.php)
+  {
+    proxy_pass http://proxy_<%= @params[:app_name] %>;
+  }
+
+  location / {
+      proxy_pass http://proxy_<%= @params[:app_name] %>;
+      proxy_cache main;
+      proxy_cache_key $cache_key;
+      proxy_cache_valid 30m; # 200, 301 and 302 will be cached.
+      # Fallback to stale cache on certain errors.
+      # 503 is deliberately missing, if we're down for maintenance
+  # we want the page to display.
+      proxy_cache_use_stale error
+                            timeout
+                            invalid_header
+                            http_500
+                            http_502
+                            http_504
+                            http_404;
+      # 2 rules to dedicate the no caching rule for logged in users.
+      proxy_cache_bypass $wordpress_auth; # Do not cache the response.
+      proxy_no_cache $wordpress_auth; # Do not serve response from cache.
+  }
+}

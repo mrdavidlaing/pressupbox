@@ -27,6 +27,7 @@ apps.each do |app_name|
   www_user_uid = app['id_int'] + 10000
   www_user_gid = app['id_int']
   port = app['id_int']
+  aliases = app['aliases']
    
   group(www_user) do
     gid www_user_gid
@@ -162,13 +163,50 @@ apps.each do |app_name|
 
   service "apache2-#{app_name}" do
     supports :status => true, :restart => true, :reload => true
-    action [ :enable, :start ]
+    action [ :enable, :restart ]
   end
 
+  # =========================
+  #  Setup app reverse proxy
+  # =========================
+  template "#{home_dir}/etc/nginx/sites-available/apache2-#{app_name}" do
+    source "nginx/nginx-app-reverse-proxy.conf.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:params => { 
+      :app_name => app_name, 
+      :aliases => aliases, 
+      :log_dir=> "#{home_dir}/var/log/nginx", 
+      :port => port } )
+    mode 0755
+  end
+
+  link "#{home_dir}/etc/nginx/sites-enabled/apache2-#{app_name}" do
+      to "#{home_dir}/etc/nginx/sites-available/apache2-#{app_name}"
+  end
 end
 
 # Disable non app specific apache2
 service "apache2" do
   action [:stop, :disable ]
 end
+
+# Setup nginx as reverse proxy for each apache app server
+template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
+  source "nginx/appcontainers_reverse_proxies.erb"
+  action :create
+  owner "root"
+  group "root"
+  mode 0755
+end
+
+nginx_site "appcontainers_reverse_proxies" do
+  enable true
+end
+
+service "nginx" do
+  action [:restart ]
+end
+
 
