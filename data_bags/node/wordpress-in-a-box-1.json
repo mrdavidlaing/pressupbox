@@ -1,0 +1,1 @@
+{"domain": "", "name": "wordpress-in-a-box-1", "roles": ["wordpress-in-a-box"], "recipes": [], "hostname": "wordpress-in-a-box-1", "fqdn": "wordpress-in-a-box-1", "role": ["wordpress-in-a-box"], "run_list": ["role[wordpress-in-a-box]"], "ipaddress": "192.168.1.70", "id": "wordpress-in-a-box-1"}

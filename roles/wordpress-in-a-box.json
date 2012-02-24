@@ -2,43 +2,14 @@
   "name": "wordpress-in-a-box",
   "chef_type": "role",
   "json_class": "Chef::Role",
-  "description": "A all-in-one webserver customised for hosting wordpress",
+  "description": "Depreciated in favour of pressupbox-live",
   "run_list": [
-    "recipe[nginx::install_from_package]",
-    "recipe[nginx::setup_add-vhosts-in-data]",
-    "recipe[mysql::server]",
-    "recipe[php5::default]",
-    "recipe[php5::fpm]",
-    "recipe[php5::fpmenable_nginx]",
-    "recipe[phpmyadmin::install]",
-    "recipe[rsync]",
-    "recipe[postfix]"
+    
   ],
   "override_attributes": {
-    "mysql": {
-       "data_dir" : "/data/mysql",
-       "server_root_password": "QzEoS8z4UjN0dIQArowX",
-       "bind-address": "127.0.0.1"
-    }
+  
   },
   "default_attributes": {
-    "ec2": {
-    },
-    "php5" : {
-       "module_list": "mysql gd",
-       "server_usage": "dedicated"
-    },
-    "php5_fpm" : {
-       "tunable" : {
-          "max_children": 60,
-          "start_servers": 10,
-          "min_spare": 10,
-          "max_spare": 20,
-          "max_requests": 1000
-        } 
-    },
-    "phpmyadmin": {
-      "home": "/var/www/phpmyadmin"
-    }
+    
   }
 }

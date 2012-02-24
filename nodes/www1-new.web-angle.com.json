@@ -1,6 +1,6 @@
 {
     "ipaddress": "178.79.164.160",
     "run_list": [
-        "role[wordpress-in-a-box]"
+        "role[pressupbox-live]"
     ]
 }
