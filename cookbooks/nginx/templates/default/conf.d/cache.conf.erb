@@ -1,0 +1,17 @@
+# Define the cache log format & cache log location
+    log_format cache '***$time_local '
+        '$upstream_cache_status '
+        'Cache-Control: $upstream_http_cache_control '
+        'Expires: $upstream_http_expires '
+        '$host '
+        '"$request" ($status) '
+        '"$http_user_agent" '
+        'Args: $args '
+        ;
+    access_log <%= node[:nginx][:log_dir] %>/cache.log cache;
+
+# Proxy cache and temp configuration.
+    proxy_cache_path /var/www/nginx_cache levels=1:2
+                     keys_zone=main:10m
+                     max_size=1g inactive=30m;
+    proxy_temp_path /var/www/nginx_temp;
