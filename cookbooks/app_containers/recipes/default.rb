@@ -38,6 +38,7 @@ apps.each do |app_name|
     comment   "#{app_name} admin user"
  
     home      home_dir
+    shell     "/bin/bash"
     supports  :manage_home => true
   end
 
