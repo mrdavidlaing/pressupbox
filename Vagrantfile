@@ -23,24 +23,24 @@ Vagrant::Config.run do |config|
     chef.cookbooks_path = ["cookbooks"]
     chef.data_bags_path = ["data_bags"]
     chef.log_level      = :debug
-    chef.add_recipe     "apt"
+ #  chef.add_recipe     "apt"
 
-    chef.add_recipe     "apparmor"
-    chef.add_recipe     "htop"
-    chef.add_recipe     "unarchivers"
-    chef.add_recipe     "timezone"
-    chef.add_recipe     "hostname"
+ #  chef.add_recipe     "apparmor"
+ #  chef.add_recipe     "htop"
+ #  chef.add_recipe     "unarchivers"
+ #  chef.add_recipe     "timezone"
+ #  chef.add_recipe     "hostname"
 
-    chef.add_recipe     "php"
-    chef.add_recipe     "php::module_apc"
-    chef.add_recipe     "php::module_xdebug"
-    chef.add_recipe     "php::module_mysql"
+ #  chef.add_recipe     "php"
+ #  chef.add_recipe     "php::module_apc"
+ #  chef.add_recipe     "php::module_xdebug"
+ #  chef.add_recipe     "php::module_mysql"
 
-    chef.add_recipe     "apache2"
-    chef.add_recipe     "apache2::mod_php5"
+ #  chef.add_recipe     "apache2"
+ #  chef.add_recipe     "apache2::mod_php5"
 
-    chef.add_recipe     "nginx::install_from_package"
-    chef.add_recipe     "nginx::setup_reverse_proxy_cache"
+   chef.add_recipe     "nginx::install_from_package"
+ #  chef.add_recipe     "nginx::setup_reverse_proxy_cache"
     
     chef.add_recipe     "app_containers"
 
