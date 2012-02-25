@@ -124,6 +124,10 @@ apps.each do |app_name|
     end
   end
 
+  link "#{home_dir}/etc/apache2/mods-available" do
+      to "/etc/apache2/mods-available"
+  end
+
   link "/etc/apache2-#{app_name}" do
       to "#{home_dir}/etc/apache2"
   end
