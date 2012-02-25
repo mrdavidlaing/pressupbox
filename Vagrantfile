@@ -39,10 +39,11 @@ Vagrant::Config.run do |config|
  #  chef.add_recipe     "apache2"
  #  chef.add_recipe     "apache2::mod_php5"
 
-   chef.add_recipe     "nginx::install_from_package"
+ #  chef.add_recipe     "nginx::install_from_package"
  #  chef.add_recipe     "nginx::setup_reverse_proxy_cache"
     
-    chef.add_recipe     "app_containers"
+ #  chef.add_recipe     "app_containers"
+    chef.add_recipe     "collectd"
 
     chef.json.merge!({
                         
