@@ -44,6 +44,8 @@ Vagrant::Config.run do |config|
     
  #  chef.add_recipe     "app_containers"
     chef.add_recipe     "collectd"
+    chef.add_recipe     "collectd_plugins"
+    
 
     chef.json.merge!({
                         
