@@ -191,11 +191,6 @@ apps.each do |app_name|
   end
 end
 
-# Disable non app specific apache2
-service "apache2" do
-  action [:stop, :disable ]
-end
-
 # Setup nginx as reverse proxy for each apache app server
 template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   source "nginx/appcontainers_reverse_proxies.erb"
