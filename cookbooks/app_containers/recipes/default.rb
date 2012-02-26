@@ -96,7 +96,17 @@ apps.each do |app_name|
      group "root"
      mode 0755
   end
-  
+
+  template "#{home_dir}/bin/tail-all-logs" do
+    source "bin/tail-all-logs.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:home_dir => home_dir)
+    mode 0750
+  end
+
+
   #The WWW folders should be +rw for admin_user & www_user, and +r for all
   directory "#{home_dir}/www" do
      action :create
