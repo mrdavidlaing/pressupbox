@@ -30,6 +30,7 @@ Vagrant::Config.run do |config|
  #  chef.add_recipe     "unarchivers"
  #  chef.add_recipe     "timezone"
  #  chef.add_recipe     "hostname"
+ #  chef.add_recipe     "multitail"
 
  #  chef.add_recipe     "php"
  #  chef.add_recipe     "php::module_apc"
@@ -42,16 +43,20 @@ Vagrant::Config.run do |config|
  #  chef.add_recipe     "nginx::install_from_package"
  #  chef.add_recipe     "nginx::setup_reverse_proxy_cache"
     
- #  chef.add_recipe     "app_containers"
-    chef.add_recipe     "collectd"
-    chef.add_recipe     "collectd_plugins"
+   chef.add_recipe     "app_containers"
+ #   chef.add_recipe     "collectd"
+ #   chef.add_recipe     "collectd_plugins"
+ #   chef.add_recipe     "collectd::collectd_web"
+
+
     
 
     chef.json.merge!({
                         
                     :set_fqdn => "pressupbox-test",
                     :php5_fpm => { :listen_socket => 100 },
-                    :apache => {:listen_ports => [ "81","444" ] } 
+                    :apache => {:listen_ports => [ "81","444" ] },
+                    :collectd => {:collectd_web => {:path=>"/var/local/collectd_web"} }
                       
                     })
   end

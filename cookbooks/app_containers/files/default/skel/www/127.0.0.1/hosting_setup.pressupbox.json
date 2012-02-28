@@ -1,0 +1,10 @@
+{
+	"sites": [
+		{
+			"server_name": "localhost",
+			"aliases": [ "app_container_admin", "admin.app_container.pressupbox" ],
+			"web_root": "httpdocs",
+			"type": "default"
+		}
+	]	
+}

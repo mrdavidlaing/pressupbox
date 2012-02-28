@@ -97,16 +97,6 @@ apps.each do |app_name|
      mode 0755
   end
 
-  template "#{home_dir}/bin/tail-all-logs" do
-    source "bin/tail-all-logs.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:home_dir => home_dir)
-    mode 0750
-  end
-
-
   #The WWW folders should be +rw for admin_user & www_user, and +r for all
   directory "#{home_dir}/www" do
      action :create
@@ -170,9 +160,14 @@ apps.each do |app_name|
     end
   end
 
-  execute "enable_default_site" do
-    command "#{home_dir}/bin/a2ensite-#{app_name} default"
-    action :run
+  #set the apache server name
+  template "#{home_dir}/etc/apache2/conf.d/server_name" do
+    source "etc/apache2/conf.d/server_name.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:server_name => app_name)
+    mode 0755
   end
 
   service "apache2-#{app_name}" do
@@ -180,25 +175,46 @@ apps.each do |app_name|
     action [ :enable, :restart ]
   end
 
-  # =========================
-  #  Setup app reverse proxy
-  # =========================
-  template "#{home_dir}/etc/nginx/sites-available/apache2-#{app_name}" do
-    source "nginx/nginx-app-reverse-proxy.conf.erb"
+  # ============================
+  #  Setup app management utils
+  # ============================
+
+  template "#{home_dir}/bin/tail-all-logs" do
+    source "bin/tail-all-logs.erb"
     action :create
     owner "root"
     group "root"
-    variables(:params => { 
-      :app_name => app_name, 
-      :aliases => aliases, 
-      :log_dir=> "#{home_dir}/var/log/nginx", 
-      :port => port } )
+    variables(:home_dir => home_dir)
     mode 0755
   end
 
-  link "#{home_dir}/etc/nginx/sites-enabled/apache2-#{app_name}" do
-      to "#{home_dir}/etc/nginx/sites-available/apache2-#{app_name}"
+  template "#{home_dir}/var/chef-solo/solo.rb" do
+    source "var/chef-solo/solo.rb.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:home_dir => home_dir)
+    mode 0744
   end
+
+  template "#{home_dir}/var/chef-solo/process-hosting_setup.runlist.json" do
+    source "var/chef-solo/process-hosting_setup.runlist.json.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:home_dir => home_dir, :app_name => app_name, :port => port)
+    mode 0744
+  end
+
+  template "#{home_dir}/bin/process-hosting_setup" do
+    source "bin/process-hosting_setup.erb"
+    action :create
+    owner "root"
+    group "root"
+    variables(:home_dir => home_dir)
+    mode 0755
+  end
+
 end
 
 # Setup nginx as reverse proxy for each apache app server
@@ -210,12 +226,13 @@ template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   mode 0755
 end
 
-nginx_site "appcontainers_reverse_proxies" do
-  enable true
+link "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
+  to "/etc/nginx/sites-enabled/appcontainers_reverse_proxies"
 end
 
 service "nginx" do
-  action [:restart ]
+  supports :reload => true
+  action [:reload ]
 end
 
 
