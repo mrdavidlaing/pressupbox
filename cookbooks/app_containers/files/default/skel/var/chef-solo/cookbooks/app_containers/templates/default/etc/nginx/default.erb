@@ -5,7 +5,7 @@ upstream proxy_<%= @params[:app_name] %>-<%= @params[:server_name] %> {
 
 server {
   listen 80;
-  server_name <% @params[:server_name] %> <% @params[:aliases].each do |a| -%><%= " #{a}" %><% end -%>;
+  server_name <%= @params[:server_name] %> <% @params[:aliases].each do |a| -%><%= " #{a}" %><% end -%>;
 
   access_log <%= @params[:home_dir] %>/var/log/nginx/access.log;
   error_log <%= @params[:home_dir] %>/var/log/nginx/error.log;

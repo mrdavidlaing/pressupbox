@@ -3,7 +3,7 @@
 		{
 			"server_name": "localhost",
 			"aliases": [ "app_container_admin", "admin.app_container.pressupbox" ],
-			"web_root": "httpdocs",
+			"web_root": "127.0.0.1/httpdocs",
 			"type": "default"
 		}
 	]	
