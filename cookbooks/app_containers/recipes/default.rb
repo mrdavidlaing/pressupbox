@@ -226,8 +226,8 @@ template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   mode 0755
 end
 
-link "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
-  to "/etc/nginx/sites-enabled/appcontainers_reverse_proxies"
+link "/etc/nginx/sites-enabled/appcontainers_reverse_proxies" do
+  to "/etc/nginx/sites-available/appcontainers_reverse_proxies"
 end
 
 service "nginx" do
