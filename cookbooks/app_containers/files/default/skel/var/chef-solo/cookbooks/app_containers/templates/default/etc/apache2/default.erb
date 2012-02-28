@@ -1,7 +1,7 @@
 <VirtualHost *:${APACHE_PORT}>
-	ServerName <%= @params[:server_name] %>;
+	ServerName <%= @params[:server_name] %>
 	<% @params[:aliases].each do |a| -%>
-	ServerAlias <%= " #{a}" %>;
+	ServerAlias <%= " #{a}" %>
 	<% end -%>
 
 	DocumentRoot <%= @params[:web_root]%>
