@@ -1,4 +1,4 @@
-proxy_cache_path /var/www/nginx_cache/<%= @params[:server_name] %> levels=1:2 keys_zone=<%= @params[:server_name] %>:10m max_size=1g 
+proxy_cache_path /var/www/nginx_cache/<%= @params[:server_name] %> levels=1:2 keys_zone=<%= @params[:server_name] %>:10m max_size=1g; 
 
 server {
   listen 80;
