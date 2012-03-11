@@ -32,6 +32,12 @@ apps.each do |app_name|
     gid www_user_gid
   end
 
+  #www-data user (used by nginx reverse proxy) needs access to 
+  #serve static files without going via app_server (apache)
+  user('www-data') do 
+    gid www_user_gid
+  end
+
   user(admin_user) do
     uid       admin_user_uid
     gid       www_user_gid
