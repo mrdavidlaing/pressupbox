@@ -69,6 +69,14 @@ hosting_setup_files.each do |hosting_setup_file|
         to "#{node['home_dir']}/etc/nginx/sites-available/#{site['server_name']}"
     end
 
+    # =========================
+    #  File file permissions
+    # =========================
+    execute "change permissions for #{node['home_dir']}/www/#{site['web_root']}" do
+      command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
+      action :run
+    end
+
   end #hosting_setup_conf['sites']
 end #hosting_setup_files
 

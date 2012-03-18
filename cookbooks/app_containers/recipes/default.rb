@@ -208,7 +208,7 @@ apps.each do |app_name|
     action :create
     owner "root"
     group "root"
-    variables(:home_dir => home_dir, :app_name => app_name, :port => port)
+    variables(:home_dir => home_dir, :app_name => app_name, :www_user => www_user, :port => port)
     mode 0744
   end
 
