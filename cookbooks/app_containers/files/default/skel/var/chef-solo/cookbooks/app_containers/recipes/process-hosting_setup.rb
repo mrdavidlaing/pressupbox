@@ -72,7 +72,7 @@ hosting_setup_files.each do |hosting_setup_file|
     # =========================
     #  File file permissions
     # =========================
-    execute "change permissions for #{node['home_dir']}/www/#{site['web_root']}" do
+    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}" do
       command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
       action :run
     end
