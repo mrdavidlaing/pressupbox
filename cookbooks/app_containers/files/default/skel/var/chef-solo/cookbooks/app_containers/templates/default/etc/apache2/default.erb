@@ -1,4 +1,5 @@
 <VirtualHost *:${APACHE_PORT}>
+	SetEnv SERVER_HOSTNAME <%= @params[:host_name] %>
 	ServerName <%= @params[:server_name] %>
 	<% @params[:aliases].each do |a| -%>
 	ServerAlias <%= " #{a}" %>

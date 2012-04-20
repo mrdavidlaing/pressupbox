@@ -32,7 +32,8 @@ hosting_setup_files.each do |hosting_setup_file|
       action :create
       owner "root"
       group "root"
-      variables(:params => { 
+      variables(:params => {  
+        :host_name => node['host_name'], 
         :server_name => site['server_name'],
         :aliases => site['aliases'], 
         :home_dir => node['home_dir'],

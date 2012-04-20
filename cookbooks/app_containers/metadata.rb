@@ -1,4 +1,4 @@
 maintainer        "David Laing"
 maintainer_email  "david@davidlaing.com"
 description       "Configure hosting container for webapps"
-version           "0.3.3"
+version           "0.4.4"

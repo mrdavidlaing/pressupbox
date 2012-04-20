@@ -86,6 +86,7 @@ apps.each do |app_name|
   # copy in the skeleton structure
   remote_directory home_dir do
     source "skel"
+    overwrite true
     files_backup 2
     files_owner admin_user
     files_group www_user
@@ -159,7 +160,7 @@ apps.each do |app_name|
   end
   
   # enable minimal set of mods
-  %w{mime authz_host dir status rewrite php5}.each do |mod|
+  %w{env mime authz_host dir status rewrite php5}.each do |mod|
     execute "a2enmod-#{app_name} #{mod}" do 
       command "#{home_dir}/bin/a2enmod-#{app_name} #{mod}" 
       action :run
@@ -208,7 +209,13 @@ apps.each do |app_name|
     action :create
     owner "root"
     group "root"
-    variables(:home_dir => home_dir, :app_name => app_name, :www_user => www_user, :port => port)
+    variables(
+        :host_name => node["hostname"], 
+        :home_dir => home_dir, 
+        :app_name => app_name, 
+        :www_user => www_user, 
+        :port => port
+    )
     mode 0744
   end
 
