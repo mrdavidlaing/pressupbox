@@ -160,7 +160,7 @@ apps.each do |app_name|
   end
   
   # enable minimal set of mods
-  %w{env mime authz_host dir status rewrite php5}.each do |mod|
+  %w{env mime authz_host dir status rewrite php5 rpaf}.each do |mod|
     execute "a2enmod-#{app_name} #{mod}" do 
       command "#{home_dir}/bin/a2enmod-#{app_name} #{mod}" 
       action :run
