@@ -451,7 +451,7 @@
     "apache/default_modules": {
       "display_name": "Apache Default Modules",
       "description": "Default modules to enable via recipes",
-      "default": "status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex dir env mime negotiation setenvif",
+      "default": "status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex dir env mime negotiation setenvif rpaf",
       "choice": [
 
       ],
@@ -501,10 +501,11 @@
     "apache2::mod_proxy_http": "Apache module 'proxy_http'",
     "apache2::mod_python": "Apache module 'python'",
     "apache2::mod_rewrite": "Apache module 'rewrite'",
+    "apache2::mod_rpaf": "Apache module 'rpaf'",
     "apache2::mod_setenvif": "Apache module 'setenvif' with config file",
     "apache2::mod_ssl": "Apache module 'ssl' with config file, adds port 443 to listen_ports",
     "apache2::mod_status": "Apache module 'status' with config file",
     "apache2::mod_xsendfile": "Apache module 'xsendfile'"
   },
-  "version": "1.1.0"
+  "version": "1.1.1"
 }
