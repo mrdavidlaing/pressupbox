@@ -17,16 +17,32 @@ def recursive_find(dir, match_string)
   results
 end
 
-hosting_setup_files = recursive_find("#{node['home_dir']}/www", 'hosting_setup.pressupbox.json')
+hosting_setup_files = recursive_find("#{node['home_dir']}/www", 'hosting_setup.pressupbox.yaml')
+                    | recursive_find("#{node['home_dir']}/www", 'hosting_setup.pressupbox.json') #json config files for backwards compatibility.  JSON is a valid subset of YAML
 
 hosting_setup_files.each do |hosting_setup_file|
 
   Chef::Log.info "Processing #{hosting_setup_file}"
-  hosting_setup_conf = JSON.parse(File.read(hosting_setup_file))
+  hosting_setup_conf = YAML.load_file(hosting_setup_file)
 
   hosting_setup_conf['sites'].each do |site|
     Chef::Log.info "Creating site: #{site['server_name']}"
+    
+    # =========================
+    #  Setup database
+    # =========================
+    if (not site['db_name'].startswith("#{node['app_name']}_"))) do
+      Chef::Log.error "db_name provided: (#{site['db_name']}) MUST start with app_container_name: #{node['app_name']}_"
+      throw error
+    end
+    execute "Create mysql DB: #{site['db_name']}" do
+      command "mysql --execute \"'CREATE DATABASE IF NOT EXISTS #{site['db_name']};'\""
+      action :run
+    end
 
+    # =========================
+    #  Setup apache vhost
+    # =========================
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
@@ -71,7 +87,7 @@ hosting_setup_files.each do |hosting_setup_file|
     end
 
     # =========================
-    #  File file permissions
+    #  Set file permissions
     # =========================
     execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}" do
       command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
