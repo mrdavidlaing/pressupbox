@@ -439,5 +439,5 @@
     "nginx::setup_vhost": "Sets up a basic vhost directory and configuration",
     "nginx::setup_add-vhosts-in-data": "Enables all vhosts defined in /data/www/vhost/*/nginx/*.conf"
   },
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
