@@ -317,7 +317,7 @@ unserialize_callback_func =
 ; When floats & doubles are serialized store serialize_precision significant
 ; digits after the floating point. The default value ensures that when floats
 ; are decoded with unserialize, the data will remain the same.
-serialize_precision = 100
+serialize_precision = 17
 
 ; This directive allows you to enable and disable warnings which PHP will issue
 ; if you pass a value by reference at function call time. Passing values by
@@ -382,7 +382,7 @@ safe_mode_protected_env_vars = LD_LIBRARY_PATH
 ; It receives a comma-delimited list of function names. This directive is
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/disable-functions
-disable_functions =
+disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,
 
 ; This directive allows you to disable certain classes for security reasons.
 ; It receives a comma-delimited list of class names. This directive is
@@ -455,7 +455,7 @@ max_input_time = 60
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
-memory_limit = -1
+memory_limit = 128M
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -621,13 +621,13 @@ html_errors = Off
 ; this setting blank.
 ; http://php.net/error-prepend-string
 ; Example:
-;error_prepend_string = "<font color=#ff0000>"
+;error_prepend_string = "<span style='color: #ff0000'>"
 
 ; String to output after an error message. PHP's default behavior is to leave
 ; this setting blank.
 ; http://php.net/error-append-string
 ; Example:
-;error_append_string = "</font>"
+;error_append_string = "</span>"
 
 ; Log errors to specified file. PHP's default behavior is to leave this value
 ; empty.
@@ -725,7 +725,7 @@ auto_globals_jit = On
 
 ; Maximum size of POST data that PHP will accept.
 ; http://php.net/post-max-size
-post_max_size = <%= node['php']['post_max_size'] %>
+post_max_size = <%= node[:apache][:php5][:post_max_size] %>
 
 ; Magic quotes are a preprocessing feature of PHP where PHP will attempt to
 ; escape any character sequences in GET, POST, COOKIE and ENV data which might
@@ -876,7 +876,7 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = <%= node['php']['upload_max_filesize'] %>
+upload_max_filesize = <%= node[:apache][:php5][:upload_max_filesize] %>
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 20
@@ -937,7 +937,6 @@ default_socket_timeout = 60
 ;
 ; If you only provide the name of the extension, PHP will look for it in its
 ; default extension directory.
-;
 
 ;;;;;;;;;;;;;;;;;;;
 ; Module Settings ;
@@ -1054,7 +1053,8 @@ smtp_port = 25
 ; Add X-PHP-Originating-Script: that will include uid of the script followed by the filename
 mail.add_x_header = On
 
-; Log all mail() calls including the full path of the script, line #, to address and headers
+; The path to a log file that will log all mail() calls. Log entries include
+; the full path of the script, line number, To address and headers.
 ;mail.log =
 
 [SQL]
@@ -1342,7 +1342,7 @@ pgsql.max_links = -1
 ; http://php.net/pgsql.ignore-notice
 pgsql.ignore_notice = 0
 
-; Log PostgreSQL backends Noitce message or not.
+; Log PostgreSQL backends Notice message or not.
 ; Unless pgsql.ignore_notice=0, module cannot log notice message.
 ; http://php.net/pgsql.log-notice
 pgsql.log_notice = 0
@@ -1481,7 +1481,7 @@ session.serialize_handler = php
 ; Development Value: 1
 ; Production Value: 1
 ; http://php.net/session.gc-probability
-session.gc_probability = 1
+session.gc_probability = 0
 
 ; Defines the probability that the 'garbage collection' process is started on every
 ; session initialization. The probability is calculated by using the following equation:
@@ -1508,7 +1508,7 @@ session.gc_maxlifetime = 1440
 ;       collection through a shell script, cron entry, or some other method.
 ;       For example, the following script would is the equivalent of
 ;       setting session.gc_maxlifetime to 1440 (1440 seconds = 24 minutes):
-;          cd /path/to/sessions; find -cmin +24 | xargs rm
+;          find /path/to/sessions -cmin +24 | xargs rm
 
 ; PHP 4.2 and less have an undocumented feature/bug that allows you to
 ; to initialize a session variable in the global scope, even when register_globals
@@ -1547,11 +1547,10 @@ session.entropy_length = 0
 
 ; Specified here to create the session id.
 ; http://php.net/session.entropy-file
+; On systems that don't have /dev/urandom /dev/arandom can be used
+; On windows, setting the entropy_length setting will activate the 
+; Windows random source (using the CryptoAPI)
 ;session.entropy_file = /dev/urandom
-session.entropy_file =
-
-; http://php.net/session.entropy-length
-;session.entropy_length = 16
 
 ; Set to {nocache,private,public,} to determine HTTP caching aspects
 ; or leave this empty to avoid sending anti-caching headers.
@@ -1579,7 +1578,7 @@ session.use_trans_sid = 0
 ;   0  (MD5 128 bits)
 ;   1  (SHA-1 160 bits)
 ; This option may also be set to the name of any hash function supported by
-; the hash extension. A list of available hashes is returned by the hash_alogs()
+; the hash extension. A list of available hashes is returned by the hash_algos()
 ; function.
 ; http://php.net/session.hash-function
 session.hash_function = 0

@@ -37,6 +37,8 @@ http {
 
   server_names_hash_bucket_size <%= node[:nginx][:server_names_hash_bucket_size] %>;
 
+  client_max_body_size <%= node[:nginx][:client_max_body_size] %>;
+
   ##
   # If HTTPS, then set a variable so it can be passed along.
   ##
