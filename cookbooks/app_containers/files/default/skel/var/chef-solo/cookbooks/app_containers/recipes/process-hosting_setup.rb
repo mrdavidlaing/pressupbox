@@ -78,7 +78,7 @@ hosting_setup_files.each do |hosting_setup_file|
       action :run
     end
     execute "change permissions of #{node['home_dir']}/www/#{site['web_root']}" do
-      command "chmod -R 775 #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
+      command "chmod -R 775 #{node['home_dir']}/www/#{site['web_root']}"
       action :run
     end
 
