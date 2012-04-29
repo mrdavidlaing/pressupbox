@@ -1,0 +1,4 @@
+#Enable app_container users to run ~/bin/* scripts as sudo
+<% @app_admin_users.each do |app_admin_user| %>
+<%= app_admin_user %> ALL=(ALL) NOPASSWD: /data/app_containers/<%= app_admin_user %>/bin/*
+<% end %>

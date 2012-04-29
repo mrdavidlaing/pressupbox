@@ -230,6 +230,16 @@ apps.each do |app_name|
 
 end
 
+#Enable app_container users to run ~/bin/* scripts as sudo
+template "/etc/sudoers.d/app_containers" do
+  source "sudoers.d-app_containers.erb"
+  action :create
+  owner "root"
+  group "root"
+  variables(:app_admin_users => apps)
+  mode 0440
+end
+
 # Setup nginx as reverse proxy for each apache app server
 template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   source "nginx/appcontainers_reverse_proxies.erb"
