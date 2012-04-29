@@ -1,7 +1,8 @@
 Vagrant::Config.run do |config|
 
-  config.vm.box     = "pressup-2-0"
-  config.vm.box_url = "/Users/mrdavidlaing/Projects/mrdavidlaing/pressupbox/scratchpad/vagrant_base_boxes/pressup-2-0.box"
+  # Ubuntu 12.04
+  config.vm.box     = "precise32_base"
+  config.vm.box_url = "http://files.travis-ci.org/boxes/bases/precise32_base.box"
 
   config.vm.forward_port 80, 4480
   config.vm.forward_port 9000, 9000
@@ -9,8 +10,8 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 9002, 9002
 
   config.vm.customize do |vm|
-     vm.memory_size = 768
-     vm.cpu_count   = 2
+     vm.memory_size = 378
+     vm.cpu_count   = 1
   end
 
   config.vm.network :hostonly, "33.33.33.10"
