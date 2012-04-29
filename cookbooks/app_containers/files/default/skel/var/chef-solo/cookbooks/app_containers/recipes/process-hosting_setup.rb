@@ -75,10 +75,12 @@ hosting_setup_files.each do |hosting_setup_file|
     # =========================
     execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}" do
       command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
+      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
     execute "change permissions of #{node['home_dir']}/www/#{site['web_root']}" do
       command "chmod -R 775 #{node['home_dir']}/www/#{site['web_root']}"
+      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
 

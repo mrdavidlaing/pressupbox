@@ -1,0 +1,8 @@
+{
+ "id": "app_container1",
+ "id_int": 9001,
+ "authorized_keys" : [
+ 	"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTaX2C8dEAa3FRgwr9Hy4+cW8oAmhAU46S6AmEq9a+4rP0pVRk51KWyDJ19DSeGz0e6nHd7JHvG5JjBqeW3e2pABLgj/z+8MqnIVbt1HexQil83FmsLK4NsGYtowPMpeW7B0lf8/Tp0tOf96DlwpUN1y/C2296xFCmjCaUVlEgHrN7PxE/8D1E2NKqShBiwdV+QPcKoVWxqHuiZuaTQAa8iYUTG9JDSToQn8NsIClNi/R3L7QyVwEHk/iKSzntQe2xuuLvAxuNAcqoic1udaB7MSEZTSpUv24YOzVqrlYDoWf3dKzXqb2xN/UnFMRvIaRwAzdG22Bhy8JG3HsEGex9 mrdavidlaing@www4.web-angle.com",
+ 	"key2"
+ ]
+}
