@@ -1,23 +1,20 @@
 Vagrant::Config.run do |config|
 
-  # Ubuntu 12.04
-  config.vm.box     = "precise32_base"
-  config.vm.box_url = "http://files.travis-ci.org/boxes/bases/precise32_base.box"
+  # Ubuntu 12.04 x64
+  config.vm.box     = "ubuntu-12.04-server-amd64"
+  config.vm.box_url = "https://s3-eu-west-1.amazonaws.com/ciapi-eu/ubuntu-12.04-server-amd64.box"
 
-  config.vm.forward_port 80, 4480
-  config.vm.forward_port 9000, 9000
-  config.vm.forward_port 9001, 9001
-  config.vm.forward_port 9002, 9002
+  config.vm.forward_port 3306, 13306 #MySQL
 
   config.vm.customize do |vm|
-     vm.memory_size = 378
-     vm.cpu_count   = 1
+     vm.memory_size = 512
+     vm.cpu_count   = 2
   end
 
   config.vm.network :hostonly, "33.33.33.10"
 
   use_nfs = !(Vagrant::Util::Platform.windows?)
-  config.vm.share_folder("home-www-labs.cityindex.com", "/data/app_containers/cityindex/www/labs.cityindex.com", "/Users/mrdavidlaing/Projects/cityindex/labs.cityindex.com", :nfs => use_nfs)
+  config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", "test/app_container1/www/test_repo", :nfs => use_nfs)
 
   config.vm.provision :chef_solo do |chef|
 
