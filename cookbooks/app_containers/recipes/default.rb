@@ -27,6 +27,7 @@ apps.each do |app_name|
   www_user_gid = app['id_int']
   port = app['id_int']
   aliases = app['aliases']
+  admin_email = app['admin_email']
    
   group(www_user) do
     gid www_user_gid
@@ -119,6 +120,16 @@ apps.each do |app_name|
     owner "root"
     group "root"
     variables(:admin_user => admin_user, :www_user => www_user)
+    mode 0644
+  end
+
+  # forward mail to admin_email
+  template "#{home_dir}/.forward" do
+    source "forward.erb"
+    action :create
+    owner admin_user
+    group www_user
+    variables(:admin_email => admin_email)
     mode 0644
   end
 
