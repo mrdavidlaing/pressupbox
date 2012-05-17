@@ -105,12 +105,12 @@ apps.each do |app_name|
      mode 0755
   end
 
-  #The WWW folders should be +rw for admin_user & www_user, and +r for all
+  #The WWW folders should be +rw for admin_user only
   directory "#{home_dir}/www" do
      action :create
      owner admin_user
      group www_user
-     mode 0775
+     mode 0755
   end
 
   # make a custom help file
