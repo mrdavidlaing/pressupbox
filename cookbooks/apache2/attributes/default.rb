@@ -129,6 +129,10 @@ default[:apache][:worker][:maxsparethreads] = 192
 default[:apache][:worker][:threadsperchild] = 64
 default[:apache][:worker][:maxrequestsperchild] = 0
 
+#PHP upload filesize settings
+default[:apache][:php5][:upload_max_filesize] = "10M"
+default[:apache][:php5][:post_max_size]       = "12M"       #must be bigger than upload_max_filesize
+
 # Default modules to enable via include_recipe
 
 default['apache']['default_modules'] = %w{

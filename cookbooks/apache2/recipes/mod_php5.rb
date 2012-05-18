@@ -23,6 +23,17 @@ when "debian", "ubuntu"
     action :install
   end  
 
+  # delete stock config
+  file "/etc/php5/apache2/php.ini" do
+    action :delete
+  end
+
+  # replace with customised config
+  template "/etc/php5/apache2/php.ini" do
+    source "etc/php5/apache2/php.ini.erb" 
+    notifies :restart, "service[apache2]"
+  end
+
 when "arch"
   package "php-apache" do
     action :install

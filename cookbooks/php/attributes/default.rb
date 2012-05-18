@@ -41,6 +41,10 @@ else
   default['php']['fpm_group']     = 'www-data'
 end
 
+#PHP upload filesize settings
+default['php']['upload_max_filesize'] = "10M"
+default['php']['post_max_size']       = "12M"       #must be bigger than upload_max_filesize
+
 default['php']['url'] = 'http://us.php.net/distributions'
 default['php']['version'] = '5.3.5'
 default['php']['checksum'] = 'a25ddae6a59d7345bcbb69ef2517784f56c2069af663ae4611e580cbdec77e22'

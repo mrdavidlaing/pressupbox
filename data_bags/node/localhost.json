@@ -1,1 +1,0 @@
-{"domain": "", "name": "localhost", "roles": ["wordpress-in-a-box"], "recipes": [], "hostname": "localhost", "fqdn": "localhost", "role": ["wordpress-in-a-box"], "run_list": ["role[wordpress-in-a-box]"], "ipaddress": "127.0.0.1", "id": "localhost"}

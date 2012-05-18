@@ -4,7 +4,7 @@
   "long_description": "",
   "maintainer": "David Laing",
   "maintainer_email": "david@davidlaing.com",
-  "license": "Apache v2.0",
+  "license": "none",
   "platforms": {
   },
   "dependencies": {
@@ -25,5 +25,5 @@
   },
   "recipes": {
   },
-  "version": "0.5.1"
+  "version": "0.7.4"
 }

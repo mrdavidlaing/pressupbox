@@ -2,7 +2,7 @@
 # Cookbook Name:: apt
 # Recipe:: cacher-client
 #
-# Copyright 2011, Opscode, Inc.
+# Copyright 2011, 2012 Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,10 +17,28 @@
 # limitations under the License.
 #
 
-servers = search(:node, 'recipes:apt\:\:cacher') || []
+#remove Acquire::http::Proxy lines from /etc/apt/apt.conf since we use 01proxy
+#these are leftover from preseed installs
+execute "Remove proxy from /etc/apt/apt.conf" do
+  command "sed --in-place '/^Acquire::http::Proxy/d' /etc/apt/apt.conf"
+  only_if "grep Acquire::http::Proxy /etc/apt/apt.conf"
+end
+
+servers = []
+if Chef::Config['solo']
+  if node['apt'] && node['apt']['cacher_ipaddress']
+    cacher = Chef::Node.new
+    cacher.name(node['apt']['cacher_ipaddress'])
+    cacher.ipaddress(node['apt']['cacher_ipaddress'])
+    servers << cacher
+  end
+else
+  servers += search(:node, 'recipes:apt\:\:cacher-ng')
+end
+
 if servers.length > 0
-  Chef::Log.info("apt-cacher server found on #{servers[0]}.")
-  proxy = "Acquire::http::Proxy \"http://#{servers[0].ipaddress}:3142\";"
+  Chef::Log.info("apt-cacher-ng server found on #{servers[0]}.")
+  proxy = "Acquire::http::Proxy \"http://#{servers[0].ipaddress}:3142\";\n"
   file "/etc/apt/apt.conf.d/01proxy" do
     owner "root"
     group "root"
@@ -29,7 +47,7 @@ if servers.length > 0
     action :create
   end
 else
-  Chef::Log.info("No apt-cacher server found.")
+  Chef::Log.info("No apt-cacher-ng server found.")
   file "/etc/apt/apt.conf.d/01proxy" do
     action :delete
     only_if {File.exists?("/etc/apt/apt.conf.d/01proxy")}
