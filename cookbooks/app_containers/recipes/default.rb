@@ -224,6 +224,7 @@ apps.each do |app_name|
         :host_name => node["hostname"], 
         :home_dir => home_dir, 
         :app_name => app_name, 
+        :admin_user => admin_user, 
         :www_user => www_user, 
         :port => port
     )

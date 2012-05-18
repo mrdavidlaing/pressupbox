@@ -83,6 +83,18 @@ hosting_setup_files.each do |hosting_setup_file|
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
+    
+    #www_user needs to own uploads && blogs.dir folders, so image uploads can happen
+    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
+      command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir"
+      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
+      action :run
+    end
+    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
+      command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}/wp-content/uploads"
+      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
+      action :run
+    end
 
   end #hosting_setup_conf['sites']
 end #hosting_setup_files
