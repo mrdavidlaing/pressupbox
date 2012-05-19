@@ -1,0 +1,29 @@
+# Hosting setup config for PressUpBox.  Written in YAML (http://www.yaml.org/refcard.html)
+{
+	"sites": [
+		{
+			"server_name": "default.pressupbox-test",
+			"aliases": [ "*.default.pressupbox-test" ],
+			"web_root": "test_repo/default",
+			"type": "default"
+		},
+		{
+			"server_name": "wordpress.pressupbox-test",
+			"aliases": [ "*.wordpress.pressupbox-test" ],
+			"web_root": "test_repo/wordpress",
+			"type": "default"
+		},
+		{
+			"server_name": "wordpressmu.pressupbox-test",
+			"aliases": [ "*.wordpressmu.pressupbox-test" ],
+			"web_root": "test_repo/wordpressmu",
+			"type": "default"
+		},
+		{
+			"server_name": "drupal.pressupbox-test",
+			"aliases": [ "*.drupal.pressupbox-test" ],
+			"web_root": "test_repo/drupal",
+			"type": "default"
+		}
+	]	
+}
