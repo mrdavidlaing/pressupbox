@@ -13,13 +13,13 @@
 		allow from all
 	</Directory>
 
-	ErrorLog ${APACHE_LOG_DIR}/error.log
+	ErrorLog <%= @params[:home_dir]%>/var/log/apache2/error.log
 
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
 	LogLevel warn
 
-	CustomLog ${APACHE_LOG_DIR}/access.log combined
+	CustomLog <%= @params[:home_dir]%>/var/log/apache2/access.log combined
 
     <IfModule php5_module>
             php_value newrelic.appname "<%= @params[:server_name] %>"

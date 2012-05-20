@@ -152,6 +152,18 @@ directory node[:apache][:cache_dir] do
   group node[:apache][:root_group]
 end
 
+theport=node[:apache][:listen_ports].map{|p| p.to_i}.uniq[0]
+template "envvars" do
+  path "#{node[:apache][:dir]}/envvars"
+  source "etc/envvars.erb"
+  owner "root"
+  group node[:apache][:root_group]
+  mode 0644
+  backup false
+  variables(:port => theport)
+  notifies :restart, resources(:service => "apache2")
+end
+
 template "apache2.conf" do
   case node[:platform]
   when "redhat", "centos", "scientific", "fedora", "arch"

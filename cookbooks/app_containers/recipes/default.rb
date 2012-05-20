@@ -22,39 +22,17 @@ apps.each do |app_name|
   home_dir = "/data/app_containers/#{app_name}"
   admin_user = "#{app_name}"
   admin_user_uid = app['id_int']
-  www_user = "#{app_name}_www"
-  www_user_uid = app['id_int'] + 10000
-  www_user_gid = app['id_int']
   port = app['id_int']
   aliases = app['aliases']
   admin_email = app['admin_email']
-   
-  group(www_user) do
-    gid www_user_gid
-  end
-
-  #www-data user (used by nginx reverse proxy) needs access to 
-  #serve static files without going via app_server (apache)
-  user('www-data') do 
-    gid www_user_gid
-  end
 
   user(admin_user) do
     uid       admin_user_uid
-    gid       www_user_gid
     comment   "#{app_name} admin user"
  
     home      home_dir
     shell     "/bin/bash"
     supports  :manage_home => true
-  end
-
-  user(www_user) do
-    uid       www_user_uid
-    gid       www_user_gid
-    comment   "#{app_name} www/service user"
-    
-    supports  :manage_home => false
   end
  
   # admin_user & www_user should have readonly access to the home folder
@@ -90,10 +68,10 @@ apps.each do |app_name|
     overwrite true
     files_backup 2
     files_owner admin_user
-    files_group www_user
+    files_group 'www-data'
     files_mode "0640"
     owner admin_user
-    group www_user
+    group 'www-data'
     mode "0750"
   end
 
@@ -109,7 +87,7 @@ apps.each do |app_name|
   directory "#{home_dir}/www" do
      action :create
      owner admin_user
-     group www_user
+     group 'www-data'
      mode 0755
   end
 
@@ -119,7 +97,7 @@ apps.each do |app_name|
     action :create
     owner "root"
     group "root"
-    variables(:admin_user => admin_user, :www_user => www_user)
+    variables(:admin_user => admin_user)
     mode 0644
   end
 
@@ -128,7 +106,7 @@ apps.each do |app_name|
     source "forward.erb"
     action :create
     owner admin_user
-    group www_user
+    group 'www-data'
     variables(:admin_email => admin_email)
     mode 0644
   end
@@ -156,7 +134,7 @@ apps.each do |app_name|
     action :create
     owner "root"
     group "root"
-    variables(:port => port, :home_dir => home_dir, :user => www_user, :group => www_user)
+    variables(:port => port, :home_dir => home_dir, :user => admin_user, :group => 'www-data')
     mode 0640
   end
 
@@ -215,6 +193,7 @@ apps.each do |app_name|
     mode 0744
   end
 
+  apache_port = node[:apache][:listen_ports].map{|p| p.to_i}.uniq[0]
   template "#{home_dir}/var/chef-solo/process-hosting_setup.runlist.json" do
     source "var/chef-solo/process-hosting_setup.runlist.json.erb"
     action :create
@@ -224,9 +203,9 @@ apps.each do |app_name|
         :host_name => node["hostname"], 
         :home_dir => home_dir, 
         :app_name => app_name, 
-        :admin_user => admin_user, 
-        :www_user => www_user, 
-        :port => port
+        :admin_user => admin_user,
+        :apache_port => apache_port, 
+        :admin_apache_port => port
     )
     mode 0744
   end
@@ -252,6 +231,25 @@ template "/etc/sudoers.d/app_containers" do
   mode 0440
 end
 
+# Setup each apache2 for each app_container site vhost
+template "/etc/apache2/sites-available/include_app_container_vhosts" do
+  source "include_app_container_vhosts.erb"
+  action :create
+  owner "root"
+  group "root"
+  variables(:app_containers => apps)
+  mode 0755
+end
+
+link "/etc/apache2/sites-enabled/include_app_container_vhosts" do
+  to "../sites-available/include_app_container_vhosts"
+end
+
+service "apache2" do
+  supports :reload => true
+  action [:reload ]
+end
+
 # Setup nginx as reverse proxy for each apache app server
 template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   source "nginx/appcontainers_reverse_proxies.erb"
@@ -262,7 +260,7 @@ template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
 end
 
 link "/etc/nginx/sites-enabled/appcontainers_reverse_proxies" do
-  to "/etc/nginx/sites-available/appcontainers_reverse_proxies"
+  to "../sites-available/appcontainers_reverse_proxies"
 end
 
 service "nginx" do

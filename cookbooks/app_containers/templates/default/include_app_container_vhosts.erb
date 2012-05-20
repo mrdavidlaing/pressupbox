@@ -1,0 +1,4 @@
+# Include all the app_container vhosts
+<% @app_containers.each do |app_container| %>
+Include /data/app_containers/<%= app_container %>/etc/apache2/sites-enabled/
+<% end %>

@@ -137,7 +137,7 @@ default[:apache][:php5][:post_max_size]       = "12M"       #must be bigger than
 
 default['apache']['default_modules'] = %w{
   status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex
-  dir env mime negotiation setenvif
+  dir env mime negotiation setenvif rewrite
 }
 
 default['apache']['default_modules'] << "log_config" if ["redhat", "centos", "scientific", "fedora", "suse", "arch", "freebsd"].include?(node.platform)

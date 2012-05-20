@@ -24,7 +24,11 @@ hosting_setup_files = hosting_setup_files_json | hosting_setup_files_yaml
 hosting_setup_files.each do |hosting_setup_file|
 
   Chef::Log.info "Processing #{hosting_setup_file}"
-  hosting_setup_conf = YAML.load_file(hosting_setup_file)
+  if ( hosting_setup_file =~ /yaml$/ )then 
+    hosting_setup_conf = YAML.load_file(hosting_setup_file)
+  else
+    hosting_setup_conf = JSON.parse(File.read(hosting_setup_file))
+  end
 
   hosting_setup_conf['sites'].each do |site|
     Chef::Log.info "Creating site: #{site['server_name']}"
@@ -69,6 +73,7 @@ hosting_setup_files.each do |hosting_setup_file|
     # =========================
     #  Setup app reverse proxy
     # =========================
+    if site.has_key?('admin_ips') then admin_ips = site['admin_ips'] else admin_ips = ["127.0.0.1"] end
     template "#{node['home_dir']}/etc/nginx/sites-available/#{site['server_name']}" do
       source "/etc/nginx/#{site['type']}.erb"
       action :create
@@ -78,7 +83,9 @@ hosting_setup_files.each do |hosting_setup_file|
         :server_name => site['server_name'], 
         :aliases => site['aliases'],
         :app_name => node['app_name'], 
-        :port => node['port'], 
+        :admin_ips => admin_ips,
+        :apache_port => node['apache_port'], 
+        :admin_apache_port => node['admin_apache_port'], 
         :home_dir => node['home_dir'],
         :web_root => "#{node['home_dir']}/www/#{site['web_root']}"
       } )
@@ -86,14 +93,14 @@ hosting_setup_files.each do |hosting_setup_file|
     end
  
     link "#{node['home_dir']}/etc/nginx/sites-enabled/#{site['server_name']}" do
-        to "#{node['home_dir']}/etc/nginx/sites-available/#{site['server_name']}"
+        to "../sites-available/#{site['server_name']}"
     end
 
     # =========================
     #  Fix file permissions
     # =========================
     execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}" do
-      command "chown -R #{node['admin_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}"
+      command "chown -R #{node['admin_user']}:www-data #{node['home_dir']}/www/#{site['web_root']}"
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
@@ -105,12 +112,12 @@ hosting_setup_files.each do |hosting_setup_file|
     
     #www_user needs to own uploads && blogs.dir folders, so image uploads can happen
     execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
-      command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir"
+      command "chown -R www-data:www-data #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir"
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
     execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
-      command "chown -R #{node['www_user']}:#{node['www_user']} #{node['home_dir']}/www/#{site['web_root']}/wp-content/uploads"
+      command "chown -R www-data:www-data  #{node['home_dir']}/www/#{site['web_root']}/wp-content/uploads"
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end

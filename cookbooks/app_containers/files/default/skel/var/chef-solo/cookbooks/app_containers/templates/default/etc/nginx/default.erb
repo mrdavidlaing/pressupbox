@@ -1,5 +1,12 @@
 proxy_cache_path /var/www/nginx_cache/<%= @params[:server_name] %> levels=1:2 keys_zone=<%= @params[:server_name] %>:10m max_size=1g; 
 
+#Is this request coming from an "admin" IP?
+map $remote_addr $is_admin_ip_<%= @params[:admin_apache_port] %>  {
+  default   "false";
+  <% @params[:admin_ips].each do |ip| %>"<%= ip %>"   "true";
+  <% end %>
+}
+
 server {
   listen 80;
   server_name <%= @params[:server_name] %> <% @params[:aliases].each do |a| -%><%= " #{a}" %><% end -%>;
@@ -18,13 +25,20 @@ server {
   proxy_cache_valid 30s; # 200, 301 and 302 will be cached.
   proxy_cache_use_stale updating error timeout invalid_header http_500 http_502 http_504 http_404;
 
-  # 2 rules to dedicate the no caching rule for logged in WP users.
-  set $wordpress_auth "";  # Must be set to blank first for when they don't exist.
+  #Conditions for not caching
+  set $should_not_cache ""; # == false
   if ($http_cookie ~* "wordpress_logged_in_[^=]*=([^%]+)%7C") {
-    set $wordpress_auth wordpress_logged_in_$1;
+    set $should_not_cache "true";
   }
-  proxy_cache_bypass $wordpress_auth; # Do not cache the response.
-  proxy_no_cache $wordpress_auth; # Do not serve response from cache.
+
+  set $apache_app_server "http://127.0.0.1:<%= @params[:apache_port] %>";
+  if ($is_admin_ip_<%= @params[:admin_apache_port] %> = "true" ) {
+      set $apache_app_server "http://127.0.0.1:<%= @params[:admin_apache_port] %>";
+      set $should_not_cache "true";
+  }
+
+  proxy_cache_bypass $should_not_cache; 
+  proxy_no_cache $should_not_cache; 
   
   #Serve static files directly without caching
   location ~* ^(/[_0-9a-zA-Z-]+)(/wp-.*\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|html|htm|ico))$  
@@ -35,14 +49,10 @@ server {
   {
     try_files $uri @apache_app_server;
   }
-  location ~* ^/(wp-admin|wp-login.php)
-  { # Don't cache wp-admin
-    proxy_pass http://127.0.0.1:<%= @params[:port] %>;
-  }
   location / {
-    proxy_pass http://127.0.0.1:<%= @params[:port] %>;
+    proxy_pass $apache_app_server;
   }
   location @apache_app_server {
-    proxy_pass http://127.0.0.1:<%= @params[:port] %>;
+    proxy_pass $apache_app_server;
   }
 }

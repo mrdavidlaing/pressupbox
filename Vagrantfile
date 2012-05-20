@@ -34,7 +34,7 @@ Vagrant::Config.run do |config|
     #chef.add_recipe     "multitail"
     #chef.add_recipe      "postfix"
 #
-    #chef.add_recipe     "apache2"
+    chef.add_recipe     "apache2"
     #chef.add_recipe     "php"
     #chef.add_recipe     "php::module_apc"
     #chef.add_recipe     "php::module_mysql"
