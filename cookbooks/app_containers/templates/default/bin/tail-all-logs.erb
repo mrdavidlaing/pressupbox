@@ -1,2 +1,2 @@
 #!/bin/bash
-multitail -s 2 -cS apache <%=@home_dir %>/var/log/nginx/*access.log -cS apache_error <%=@home_dir %>/var/log/nginx/*error.log -cS apache <%=@home_dir %>/var/log/apache2/*access.log -cS apache_error <%=@home_dir %>/var/log/apache2/*error.log
+multitail --label "NGINX > " -n 5 -ci red <%=@home_dir %>/var/log/nginx/access.log  --label "CACHE > " -n 5 -ci blue -I <%=@home_dir %>/var/log/nginx/cache-access.log --label "APACHE> " -n 5 -ci green -I <%=@home_dir %>/var/log/apache2/access.log --label "NGINX > " -n 5 -ci red <%=@home_dir %>/var/log/nginx/error.log --label "APACHE>" -n 5 -ci green -I <%=@home_dir %>/var/log/apache2/error.log
