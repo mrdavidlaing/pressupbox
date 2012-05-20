@@ -1,9 +1,9 @@
 proxy_cache_path /var/www/nginx_cache/<%= @params[:server_name] %> levels=1:2 keys_zone=<%= @params[:server_name] %>:10m max_size=1g; 
 
 #Is this request coming from an "admin" IP?
-map $remote_addr $is_admin_ip_<%= @params[:admin_apache_port] %>  {
+geo $is_admin_ip_<%= @params[:admin_apache_port] %>  {
   default   "false";
-  <% @params[:admin_ips].each do |ip| %>"<%= ip %>"   "true";
+  <% @params[:admin_ips].each do |ip| %><%= ip %>   "true";
   <% end %>
 }
 
