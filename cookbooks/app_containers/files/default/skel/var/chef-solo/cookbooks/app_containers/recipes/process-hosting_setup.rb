@@ -129,6 +129,10 @@ service "apache2-#{node['app_name']}" do
  action [:restart ]
 end
 
+service "apache2" do
+ action [:restart ]
+end
+
 service "nginx" do
   action [:restart ]
 end
