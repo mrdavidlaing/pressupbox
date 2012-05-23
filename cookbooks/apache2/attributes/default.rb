@@ -116,7 +116,7 @@ default[:apache][:allowed_openids] = Array.new
 # Prefork Attributes
 default[:apache][:prefork][:startservers] = 16
 default[:apache][:prefork][:minspareservers] = 16
-default[:apache][:prefork][:maxspareservers] = 32
+default[:apache][:prefork][:maxspareservers] = 24
 default[:apache][:prefork][:serverlimit] = 400
 default[:apache][:prefork][:maxclients] = 400
 default[:apache][:prefork][:maxrequestsperchild] = 10000
