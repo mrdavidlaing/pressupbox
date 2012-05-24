@@ -7,21 +7,40 @@
 			"web_root": "test_repo/default",
 			"type": "default",
 			#User ip2cidr.com to convert IP range into CIDR notation
-			"admin_ips": ["127.0.0.1/32", "33.33.33.1/32"]
+			"admin_ips": [ 
+				"127.0.0.1/32", 
+				"33.33.33.1/32"
+			]
 		},
 		{
 			"server_name": "wordpress.pressupbox-test",
 			"aliases": [ "*.wordpress.pressupbox-test" ],
 			"web_root": "test_repo/wordpress",
 			"type": "default",
-			"admin_ips": ["127.0.0.1/32", "33.33.33.1/32"]
+			"admin_ips": [ 
+				"127.0.0.1/32", 
+				"33.33.33.1/32"
+			],
+			"upload_folders": [  #relative to www_root
+				"wp-content/themes/*/cache",
+				"uploads", 
+				"blogs.dir"
+			]
 		},
 		{
 			"server_name": "wordpressmu.pressupbox-test",
 			"aliases": [ "*.wordpressmu.pressupbox-test" ],
 			"web_root": "test_repo/wordpressmu",
 			"type": "default",
-			"admin_ips": ["127.0.0.1/32", "33.33.33.1/32"]
+			"admin_ips": [ 
+				"127.0.0.1/32", 
+				"33.33.33.1/32"
+			],
+			"upload_folders": [
+				"wp-content/themes/*/cache",
+				"uploads",
+				"blogs.dir"
+			]
 		},
 		{
 			"server_name": "drupal.pressupbox-test",

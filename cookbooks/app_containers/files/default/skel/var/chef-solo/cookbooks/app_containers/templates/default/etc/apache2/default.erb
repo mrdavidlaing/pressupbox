@@ -1,3 +1,8 @@
+<%  #ensure directory paths end with /
+	@params[:home_dir] << '/' unless @params[:home_dir].end_with?('/')
+    @params[:web_root] << '/' unless @params[:web_root].end_with?('/')
+-%>
+
 <VirtualHost *:${APACHE_PORT}>
 	SetEnv SERVER_HOSTNAME <%= @params[:host_name] %>
 	ServerName <%= @params[:server_name] %>
@@ -6,20 +11,32 @@
 	<% end -%>
 
 	DocumentRoot <%= @params[:web_root]%>
-	<Directory <%= @params[:web_root]%>/ >
+	<Directory <%= @params[:web_root]%> >
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride All
 		Order allow,deny
 		allow from all
 	</Directory>
 
-	ErrorLog <%= @params[:home_dir]%>/var/log/apache2/error.log
+	<% unless @params[:upload_folders].empty? -%>
+	# Restrict access to "upload_folders" 
+    <% @params[:upload_folders].each do |upload_folder| 
+    	 upload_folder << '/' unless upload_folder.end_with?('/') -%>
+	<Directory "<%=@params[:web_root]%><%=upload_folder%>">
+	    AllowOverride None  
+	    Options None        
+	    Deny from all       
+	    php_flag engine off 
+	</Directory>
+	<% end -%>
+	<% end -%>
 
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
+	ErrorLog <%= @params[:home_dir]%>var/log/apache2/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
 	LogLevel warn
 
-	CustomLog <%= @params[:home_dir]%>/var/log/apache2/access.log combined
+	CustomLog <%= @params[:home_dir]%>var/log/apache2/access.log combined
 
     <IfModule php5_module>
             php_value newrelic.appname "<%= @params[:server_name] %>"

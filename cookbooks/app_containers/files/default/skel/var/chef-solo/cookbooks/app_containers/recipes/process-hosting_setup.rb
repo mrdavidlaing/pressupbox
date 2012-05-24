@@ -50,6 +50,7 @@ hosting_setup_files.each do |hosting_setup_file|
     # =========================
     #  Setup apache vhost
     # =========================
+    if site.has_key?('upload_folders') then upload_folders = site['upload_folders'] else upload_folders = [] end
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
@@ -60,7 +61,8 @@ hosting_setup_files.each do |hosting_setup_file|
         :server_name => site['server_name'],
         :aliases => site['aliases'], 
         :home_dir => node['home_dir'],
-        :web_root => "#{node['home_dir']}/www/#{site['web_root']}"
+        :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
+        :upload_folders => upload_folders
        } )
       mode 0755
     end
@@ -110,16 +112,13 @@ hosting_setup_files.each do |hosting_setup_file|
       action :run
     end
     
-    #www_user needs to own uploads && blogs.dir folders, so image uploads can happen
-    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
-      command "chown -R www-data:www-data #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir"
-      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
-      action :run
-    end
-    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}/wp-content/blogs.dir" do
-      command "chown -R www-data:www-data  #{node['home_dir']}/www/#{site['web_root']}/wp-content/uploads"
-      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
-      action :run
+    #www-data group needs write permissions to the "upload_folders" so image uploads can happen
+    upload_folders.each do |upload_folder|
+      execute "give www-data group +rw to #{node['home_dir']}/www/#{site['web_root']}/#{upload_folder}" do
+        command "chmod g+rwx -R #{node['home_dir']}/www/#{site['web_root']}/#{upload_folder}"
+        returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
+        action :run
+      end
     end
 
   end #hosting_setup_conf['sites']
