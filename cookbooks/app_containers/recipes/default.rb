@@ -28,6 +28,7 @@ apps.each do |app_name|
 
   user(admin_user) do
     uid       admin_user_uid
+    group     "www-data"
     comment   "#{app_name} admin user"
  
     home      home_dir
