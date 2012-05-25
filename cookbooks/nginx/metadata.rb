@@ -2,7 +2,7 @@ maintainer        "David Laing"
 maintainer_email  "david@davidlaing.com"
 license           "Apache 2.0"
 description       "Originally forked from and inspired by the Ryan Geyer's cookbook"
-version           "0.0.3"
+version           "0.0.4"
 
 recipe "nginx::install_from_package", "Installs nginx package and sets up configuration with Debian apache style with sites-enabled/sites-available"
 recipe "nginx::install_from_source", "Installs nginx from source and sets up configuration with Debian apache style with sites-enabled/sites-available"
