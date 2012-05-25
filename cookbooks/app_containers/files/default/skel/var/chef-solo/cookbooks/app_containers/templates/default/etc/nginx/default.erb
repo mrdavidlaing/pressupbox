@@ -1,7 +1,8 @@
+<% servername_compressed = @params[:server_name].gsub(".", "") -%>
 proxy_cache_path /var/www/nginx_cache/<%= @params[:server_name] %> levels=1:2 keys_zone=<%= @params[:server_name] %>:10m max_size=1g; 
 
 #Is this request coming from an "admin" IP?
-geo $is_admin_ip_<%= @params[:admin_apache_port] %>  {
+geo $is_admin_ip_<%= servername_compressed %>  {
   default   "false";
   <% @params[:admin_ips].each do |ip| %><%= ip %>   "true";
   <% end %>
@@ -32,7 +33,7 @@ server {
   }
 
   set $apache_app_server "http://127.0.0.1:<%= @params[:apache_port] %>";
-  if ($is_admin_ip_<%= @params[:admin_apache_port] %> = "true" ) {
+  if ($is_admin_ip_<%= servername_compressed %> = "true" ) {
       set $apache_app_server "http://127.0.0.1:<%= @params[:admin_apache_port] %>";
       set $should_not_cache "true";
   }
