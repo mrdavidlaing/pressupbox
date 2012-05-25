@@ -101,21 +101,26 @@ hosting_setup_files.each do |hosting_setup_file|
     # =========================
     #  Fix file permissions
     # =========================
-    execute "change ownership of #{node['home_dir']}/www/#{site['web_root']}" do
-      command "chown -R #{node['admin_user']}:www-data #{node['home_dir']}/www/#{site['web_root']}"
+    execute "change ownership to #{node['admin_user']}:www-data for #{File.join(node['home_dir'],"www",site['web_root'])}" do
+      command "chown -R #{node['admin_user']}:www-data #{File.join(node['home_dir'],"www",site['web_root'])}"
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
-    execute "change permissions of #{node['home_dir']}/www/#{site['web_root']}" do
-      command "chmod -R 755 #{node['home_dir']}/www/#{site['web_root']}"
+    execute "change folder permissions to 0750 for #{File.join(node['home_dir'],"www",site['web_root'])} " do
+      command "find #{File.join(node['home_dir'],"www",site['web_root'])} -type d -exec chmod 0750 {} \\;"
+      returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
+      action :run
+    end
+    execute "change file permissions to 0640 for #{File.join(node['home_dir'],"www",site['web_root'])}" do
+      command "find #{File.join(node['home_dir'],"www",site['web_root'])} -type f -exec chmod 0640 {} \\;"
       returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
       action :run
     end
     
     #www-data group needs write permissions to the "upload_folders" so image uploads can happen
     upload_folders.each do |upload_folder|
-      execute "give www-data group +rw to #{node['home_dir']}/www/#{site['web_root']}/#{upload_folder}" do
-        command "chmod g+rwx -R #{node['home_dir']}/www/#{site['web_root']}/#{upload_folder}"
+      execute "give www-data group +rw to #{File.join(node['home_dir'],"www",site['web_root'],upload_folder)}" do
+        command "chmod g+rwx -R #{File.join(node['home_dir'],"www",site['web_root'],upload_folder)}"
         returns [0,1]  #errors are allowed because in the dev setup where this is a shared nfs folder, you cannot chown / chmod
         action :run
       end
