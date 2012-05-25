@@ -51,6 +51,7 @@ hosting_setup_files.each do |hosting_setup_file|
     #  Setup apache vhost
     # =========================
     if site.has_key?('upload_folders') then upload_folders = site['upload_folders'] else upload_folders = [] end
+    if site.has_key?('aliases') then aliases = site['aliases'] else aliases = [] end
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
@@ -59,7 +60,7 @@ hosting_setup_files.each do |hosting_setup_file|
       variables(:params => {  
         :host_name => node['host_name'], 
         :server_name => site['server_name'],
-        :aliases => site['aliases'], 
+        :aliases => aliases, 
         :home_dir => node['home_dir'],
         :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
         :upload_folders => upload_folders
@@ -83,7 +84,7 @@ hosting_setup_files.each do |hosting_setup_file|
       group "root"
       variables(:params => { 
         :server_name => site['server_name'], 
-        :aliases => site['aliases'],
+        :aliases => aliases,
         :app_name => node['app_name'], 
         :admin_ips => admin_ips,
         :apache_port => node['apache_port'], 

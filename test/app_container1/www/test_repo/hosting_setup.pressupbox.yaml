@@ -1,53 +1,32 @@
 # Hosting setup config for PressUpBox.  Written in YAML (http://www.yaml.org/refcard.html)
-{
-	"sites": [
-		{
-			"server_name": "default.pressupbox-test",
-			"aliases": [ "*.default.pressupbox-test" ],
-			"web_root": "test_repo/default",
-			"type": "default",
-			#User ip2cidr.com to convert IP range into CIDR notation
-			"admin_ips": [ 
-				"127.0.0.1/32", 
-				"33.33.33.1/32"
-			]
-		},
-		{
-			"server_name": "wordpress.pressupbox-test",
-			"aliases": [ "*.wordpress.pressupbox-test" ],
-			"web_root": "test_repo/wordpress",
-			"type": "default",
-			"admin_ips": [ 
-				"127.0.0.1/32", 
-				"33.33.33.1/32"
-			],
-			"upload_folders": [  #relative to www_root
-				"wp-content/themes/*/cache",
-				"uploads", 
-				"blogs.dir"
-			]
-		},
-		{
-			"server_name": "wordpressmu.pressupbox-test",
-			"aliases": [ "*.wordpressmu.pressupbox-test" ],
-			"web_root": "test_repo/wordpressmu",
-			"type": "default",
-			"admin_ips": [ 
-				"127.0.0.1/32", 
-				"33.33.33.1/32"
-			],
-			"upload_folders": [
-				"wp-content/themes/*/cache",
-				"uploads",
-				"blogs.dir"
-			]
-		},
-		{
-			"server_name": "drupal.pressupbox-test",
-			"aliases": [ "*.drupal.pressupbox-test" ],
-			"web_root": "test_repo/drupal",
-			"type": "default",
-			"admin_ips": ["127.0.0.1/32", "33.33.33.1/32"]
-		}
-	]	
-}
+defaults: &defaults
+  type: "default"
+  admin_ips:  #Use ip2cidr.com to convert IP range into CIDR notation
+    - "127.0.0.1/32"
+    - "33.33.33.1/32"
+  upload_folders: #relative to www_root
+    - "wp-content/uploads"
+    - "wp-content/blogs.dir"
+sites:
+  - <<: *defaults
+    server_name: "default.pressupbox-test"
+    web_root: "test_repo/default"
+  - <<: *defaults
+    server_name: "wordpress"
+    aliases: 
+      - *.wordpress.pressupbox-test
+    web_root: "test_repo/default"
+    upload_folders: #relative to www_root
+      - "wp-content/uploads"
+      - "wp-content/blogs.dir"
+      - "wp-content/themes/*/cache"
+  - <<: *defaults
+    server_name: "wordpressmu.pressupbox-test"
+    aliases: 
+      "*.wordpressmu.pressupbox-test"
+    web_root: "test_repo/wordpressmu"
+  - <<: *defaults
+    server_name: "drupal.pressupbox-test"
+    aliases: 
+      "*.drupal.pressupbox-test"
+    web_root: "test_repo/drupal"
