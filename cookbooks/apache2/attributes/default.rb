@@ -114,11 +114,11 @@ default[:apache][:traceenable] = "On"
 default[:apache][:allowed_openids] = Array.new
 
 # Prefork Attributes
-default[:apache][:prefork][:startservers] = 16
-default[:apache][:prefork][:minspareservers] = 16
-default[:apache][:prefork][:maxspareservers] = 24
-default[:apache][:prefork][:serverlimit] = 400
-default[:apache][:prefork][:maxclients] = 400
+default[:apache][:prefork][:startservers] = 10
+default[:apache][:prefork][:minspareservers] = 10
+default[:apache][:prefork][:maxspareservers] = 15
+default[:apache][:prefork][:serverlimit] = 20
+default[:apache][:prefork][:maxclients] = 20
 default[:apache][:prefork][:maxrequestsperchild] = 10000
 
 # Worker Attributes
