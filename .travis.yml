@@ -1,6 +1,6 @@
 language: ruby
 gemfile:
-  - site-cookbooks/test/support/Gemfile
+  - cookbooks/test/support/Gemfile
 rvm:
   - 1.9.3
-script: BUNDLE_GEMFILE=site-cookbooks/test/support/Gemfile bundle exec rake test foodcritic
+script: BUNDLE_GEMFILE=cookbooks/test/support/Gemfile bundle exec rake test foodcritic
