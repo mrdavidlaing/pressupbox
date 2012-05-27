@@ -1,6 +1,0 @@
-{
-    "ipaddress": "178.79.164.160",
-    "run_list": [
-        "role[pressupbox-live]"
-    ]
-}
