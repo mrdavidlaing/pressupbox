@@ -20,18 +20,22 @@
 
 pkgs = value_for_platform(
   [ "centos", "redhat", "fedora" ] => {
-    "default" => %w{ php53 php53-devel php53-cli php53-fpm php-pear }
+    "default" => %w{ php53 php53-devel php53-cli php-pear }
   },
   [ "debian", "ubuntu" ] => {
-    "default" => %w{ php5-cgi php5 php5-dev php5-cli php5-fpm php-pear }
+    "default" => %w{ php5-cgi php5 php5-dev php5-cli php-pear }
   },
-  "default" => %w{ php5-cgi php5 php5-dev php5-cli  php5-fpm php-pear }
+  "default" => %w{ php5-cgi php5 php5-dev php5-cli php-pear }
 )
 
 pkgs.each do |pkg|
   package pkg do
     action :install
   end
+end
+
+package 'php5-fpm' do
+    action :remove
 end
 
 template "#{node['php']['conf_dir']}/php.ini" do
