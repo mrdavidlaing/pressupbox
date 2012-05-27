@@ -14,7 +14,7 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "33.33.33.10"
 
   use_nfs = !(Vagrant::Util::Platform.windows?)
-  config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", "test/app_container1/www/test_repo", :nfs => use_nfs)
+  config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", "samples/app_container1/www/test_repo", :nfs => use_nfs)
 
   config.vm.provision :chef_solo do |chef|
 
