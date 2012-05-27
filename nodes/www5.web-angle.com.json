@@ -1,6 +1,0 @@
-{
-    "ipaddress": "10.250.157.46",
-    "run_list": [
-        "role[wordpress-in-a-box]"
-    ]
-}
