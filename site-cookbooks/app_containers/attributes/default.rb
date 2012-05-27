@@ -1,1 +1,1 @@
-default["app_containers"]["sample_attr"]   = "sample"
+default["app_containers"]["sample_attr"] = "sample"

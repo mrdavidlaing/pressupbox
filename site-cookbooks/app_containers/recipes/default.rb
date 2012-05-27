@@ -20,7 +20,7 @@ apps.each do |app_name|
   Chef::Log.info "Creating container for app: #{app_name}"
   
   home_dir = "/data/app_containers/#{app_name}"
-  admin_user = "#{app_name}"
+  admin_user = app_name
   admin_user_uid = app['id_int']
   port = app['id_int']
   aliases = app['aliases']
@@ -194,7 +194,7 @@ apps.each do |app_name|
     mode 0744
   end
 
-  apache_port = node[:apache][:listen_ports].map{|p| p.to_i}.uniq[0]
+  apache_port = node["apache"]["listen_ports"].map{|p| p.to_i}.uniq[0]
   template "#{home_dir}/var/chef-solo/process-hosting_setup.runlist.json" do
     source "var/chef-solo/process-hosting_setup.runlist.json.erb"
     action :create
