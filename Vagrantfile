@@ -1,8 +1,8 @@
 Vagrant::Config.run do |config|
 
   # Ubuntu 12.04 x64
-  config.vm.box     = "ubuntu-12.04-server-amd64"
-  config.vm.box_url = "https://s3-eu-west-1.amazonaws.com/ciapi-eu/ubuntu-12.04-server-amd64.box"
+  config.vm.box     = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
   config.vm.forward_port 3306, 13306 #MySQL
 
