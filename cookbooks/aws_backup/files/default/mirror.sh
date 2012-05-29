@@ -41,7 +41,7 @@ check_errs()
   if [ "${1}" -ne "0" ]; then
     echo "ERROR # ${1} : ${2}"
     #Shutdown the instance we started
-    #ec2-terminate-instances --region ${region} ${iid}
+    ec2-terminate-instances --region ${region} ${iid}
     # as a bonus, make our script exit with the right error code.
     exit ${1}
   fi
@@ -177,6 +177,7 @@ echo AMI ${new_ami} is available
 echo ${new_ami} > ~/.ec2/www1-backup.ami
 
 ### Shutdown instance
-ec2-terminate-instances ${iid}
+ec2-terminate-instances --region ${region} ${iid}
 
 echo "mirror: done!"
+
