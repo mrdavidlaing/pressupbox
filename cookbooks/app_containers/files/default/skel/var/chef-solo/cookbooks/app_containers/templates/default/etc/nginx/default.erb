@@ -42,11 +42,11 @@ server {
   proxy_no_cache $should_not_cache; 
   
   #Serve static files directly without caching
-  location ~* ^(/[_0-9a-zA-Z-]+)(/wp-.*\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|html|htm|ico))$  
+  location ~* ^(/[_0-9a-zA-Z-]+)(/wp-.*\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|xml|html|htm|ico))$  
   { # Extract filename in WPMU subfolder setup
     try_files $2 @apache_app_server;
   }
-  location ~* ^.+\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|html|htm|ico)$
+  location ~* ^.+\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|xml|html|htm|ico)$
   {
     try_files $uri @apache_app_server;
   }
