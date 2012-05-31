@@ -73,7 +73,7 @@ include_recipe "unarchivers"
 include_recipe "multitail"
 
 include_recipe "postfix"
-include_recipe "mysql"
+include_recipe "mysql::server"
 
 include_recipe "php"
 include_recipe "php::module_apc"
