@@ -41,7 +41,7 @@ check_errs()
   if [ "${1}" -ne "0" ]; then
     echo "ERROR # ${1} : ${2}"
     #Shutdown the instance we started
-    ec2-terminate-instances --region ${region} ${iid}
+    #ec2-terminate-instances --region ${region} ${iid}
     # as a bonus, make our script exit with the right error code.
     exit ${1}
   fi
@@ -118,7 +118,7 @@ do
   export status=`ec2-describe-instances --region ${region} ${iid} | grep INSTANCE  | cut -f6`
   if [ $status == ${RUNNING} ]; then
     export done="true"
-    sleep 30 #wait just a leetle bit longer, so the services have a change to get going
+    sleep 30 #wait just a leetle bit longer, so the services have a chance to get going
   else
     echo Waiting...
     sleep 10
@@ -135,12 +135,15 @@ export EC2_HOST=`ec2-describe-instances  --region ${region} | grep "${iid}" | tr
 export KNOWN_HOSTS='/tmp/known_hosts.$$'
 rm $KNOWN_HOSTS
 
+#Ensure the /data folder is mounted
+ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST 'sudo echo "/dev/xvdf    /data    auto   defaults,nobootwait   0    2" | sudo tee -a /etc/fstab && sudo mount -a'
+
 ### Copy of the mysql snapshot 
 echo "mirror_mysql: start"
-ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql stop" 
+#ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql stop" 
 nice -n19 ionice -c3 rsync  -e "ssh -i ${id_file} -o 'UserKnownHostsFile=$KNOWN_HOSTS'" --rsync-path "sudo rsync" --quiet --exclude=debian-5.1.flag --exclude=ibdata1 --exclude=ib_logfile* --exclude=mysql_upgrade_info --delete-during -aSEzh --log-file=/var/log/pressupbox/mirror_msql.log /data/mysql_snapshots/. ubuntu@$EC2_HOST:/data/mysql/.
 check_errs $? "unable to rsync mysql snapshot"
-ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql start" 
+#ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql start" 
 check_errs $? "unable to start remote mysql service"
 echo "mirror_mysql: done"
 
