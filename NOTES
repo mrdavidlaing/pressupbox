@@ -12,53 +12,9 @@ fdisk -l
 mke2fs -N 4000000 -t ext4 /dev/xvdf
 vi /etc/fstab 
    /dev/xvdf /data	auto	defaults,nobootwait,comment=cloudconfig	0	0
-
 mount -all
 df -h
 
-2.5 Move /home to /data/home
-mv /home /data
-sudo usermod --home /data/home/ubuntu ubuntu
-
-2.6 ensure all users are part of www-data group
-adduser {username} www-data
-NB:  {username} must close and open terminal before new permissions take effect
-
-3.  Change hostname
-  sudo vi /etc/hostname
-  sudo vi /etc/hosts
-  sudo service hostname start
-
-4.  fix node:www4.web-angle.com deploy_chef
-5.  fix node:www4.web-angle.com role:wordpress-in-a-box
-
-5.1  Move mysql folder
-   sudo mv /var/lib/mysql /data
-****   ensure /etc/mysql/my.cnf datadir=/data/mysql
-
-5.2  Run fix node:www4.web-angle.com to finish
-
-6. Install apache WebDAV
-sudo apt-get install apache2 libapache2-mod-encoding apache2-mpm-itk
-sudo vi /etc/apache2/ports.conf 
-  -> change ports to 81 & 444
-sudo a2enmod dav_fs
-sudo a2enmod dav* encoding
-sudo vi /etc/apache2/sites-available/default
-
-     <VirtualHost *:81>
-
-        Alias /mrdavidlaing /
-        DAVLockDB /var/DAVLock.db
-        <Location /mrdavidlaing>
-                DAV On
-                Options None
-                AssignUserId mrdavidlaing admin
-        </Location>
-
-7.  Install NodeJs
-  (also installs cloud9 ide to  /tmp/node-install/node-v0.6.5/cloud9
-  need: sudo apt-get install libssl0.9.8
 
 8.  Setup SSH tunnel (using blowfish encryption, which is slightly less secure but less CPU intensive)
    ssh -f -c blowfish www4.web-angle.com -L 10080:127.0.0.1:80 -L10081:127.0.0.1:81 -L13000:127.0.0.1:3000  -L12000:127.0.0.1:2000   -N
