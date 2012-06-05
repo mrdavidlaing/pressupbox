@@ -146,7 +146,7 @@ ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HO
 ### Copy of the mysql snapshot 
 echo "mirror_mysql: start"
 #ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql stop" 
-nice -n19 ionice -c3 rsync  -e "ssh -i ${id_file} -o 'UserKnownHostsFile=$KNOWN_HOSTS'" --rsync-path "sudo rsync" --quiet --exclude=debian-5.1.flag --exclude=ibdata1 --exclude=ib_logfile* --exclude=mysql_upgrade_info --delete-during --inplace -aSEzh --log-file=/var/log/pressupbox/mirror_msql.log /data/mysql_snapshots/. ubuntu@$EC2_HOST:/data/mysql/.
+nice -n19 ionice -c3 rsync  -e "ssh -i ${id_file} -o 'UserKnownHostsFile=$KNOWN_HOSTS'" --rsync-path "sudo rsync" --quiet --exclude=debian-5.1.flag --exclude=ibdata1 --exclude=ib_logfile* --exclude=mysql_upgrade_info --delete-during --inplace -aEzh --log-file=/var/log/pressupbox/mirror_msql.log /data/mysql_snapshots/. ubuntu@$EC2_HOST:/data/mysql/.
 check_errs $? "unable to rsync mysql snapshot"
 #ssh -i ${id_file} -o "StrictHostKeyChecking no" -o "UserKnownHostsFile=$KNOWN_HOSTS" ubuntu@$EC2_HOST "sudo service mysql start" 
 check_errs $? "unable to start remote mysql service"
@@ -154,7 +154,7 @@ echo "mirror_mysql: done"
 
 ### Copy of the app_containers
 echo "mirror_appcontainers: start"
-nice -n19 ionice -c3 rsync  -e "ssh -i ${id_file} -o 'UserKnownHostsFile=$KNOWN_HOSTS'" --rsync-path "sudo rsync"  --quiet --delete-during --inplace -aSEzh --log-file=/var/log/pressupbox/mirror_appcontainers.log /data/app_containers/. ubuntu@$EC2_HOST:/data/app_containers/.
+nice -n19 ionice -c3 rsync  -e "ssh -i ${id_file} -o 'UserKnownHostsFile=$KNOWN_HOSTS'" --rsync-path "sudo rsync"  --quiet --delete-during --inplace -aEzh --log-file=/var/log/pressupbox/mirror_appcontainers.log /data/app_containers/. ubuntu@$EC2_HOST:/data/app_containers/.
 check_errs $? "unable to rsync app_containers"
 echo "mirror_appcontainers: done"
 
@@ -190,12 +190,4 @@ ec2-terminate-instances --region ${region} ${iid}
 echo "mirror: done!"
   EOH
 end
-
-ruby_block "release lock" do
-  block do
-    lockfile.flock(File::LOCK_UN)
-  end
-  action :create
-end
-
 
