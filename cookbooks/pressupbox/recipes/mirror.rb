@@ -17,8 +17,6 @@ bash "mirror_to_aws" do
   user "root"
   cwd "/root"
   code <<-EOH
-echo "mirror: starting..."
-
 # Amazon login parameters
 export EC2_PRIVATE_KEY=`ls ~/.ec2/pk-*.pem`
 export EC2_CERT=`ls ~/.ec2/cert-*.pem`
@@ -86,7 +84,7 @@ export rid=`cat /tmp/a | grep SPOTINSTANCEREQUEST | cut -f2`
 # of the databases
 #
 echo "take a snapshot of mysql dbs"
-mysqlhotcopy $DBS_TO_BACKUP --addtodest --quiet /data/mysql_snapshots
+
 check_errs $? "unable to take snapshot of mysql dbs"
 
 #

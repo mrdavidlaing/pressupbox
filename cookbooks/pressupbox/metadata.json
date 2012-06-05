@@ -44,5 +44,5 @@
     "pressupbox": "Combines a set of cookbooks to create a working PressUpBox",
     "pressupbox::mirror": "Mirror all or part of this PressUpBox to another"
   },
-  "version": "0.1.8"
+  "version": "0.1.9"
 }
