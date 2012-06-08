@@ -14,6 +14,8 @@ ruby_block "aquire run lock" do
 end
 
 bash "mirror_to_aws" do
+  timeout 5400  #let the job run for a max of 90 min
+  
   user "root"
   cwd "/root"
   code <<-EOH
@@ -56,7 +58,7 @@ check_errs()
   if [ "${1}" -ne "0" ]; then
     echo "ERROR # ${1} : ${2}"
     #Shutdown the instance we started
-    #ec2-terminate-instances --region ${region} ${iid}
+    ec2-terminate-instances --region ${region} ${iid}
     # as a bonus, make our script exit with the right error code.
     exit ${1}
   fi
@@ -158,12 +160,20 @@ echo "mirror_appcontainers: done"
 
 ### Bundle instance into an AMI
 export new_ami=`ec2-create-image --region ${region} ${iid} --name "www1-backup at $(date +%Y%m%dT%H%M%S)" --description "Snapshot of  ${iid} created at $(date +%Y%m%dT%H%M%S)"  | awk '{ printf $2; }'`
+check_errs $? "Unable to bundle instance into AMI"
 
+#Save for next run
+echo ${new_ami} > ~/.ec2/www1-backup.ami
+
+sleep 60
+echo Terminating "backup" instance ${iid}
+ec2-terminate-instances --region ${region} ${iid}
+check_errs $? "Unable to terminate "backup" instance ${iid}"
+
+echo Bundling new AMI ${new_ami}
 #
 # Loop until the status changes to 'active'
 #
-
-sleep 30
 echo Waiting for AMI to be created ${new_ami}
 export done="false"
 while [ $done == "false" ]
@@ -177,13 +187,8 @@ do
   sleep 60
  fi
 done
+check_errs $? "Error occured in creation of new AMI ${new_ami}"
 echo AMI ${new_ami} is available
-
-#Save for next run
-echo ${new_ami} > ~/.ec2/www1-backup.ami
-
-### Shutdown instance
-ec2-terminate-instances --region ${region} ${iid}
 
 echo "mirror: done!"
   EOH
