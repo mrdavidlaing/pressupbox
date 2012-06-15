@@ -51,6 +51,11 @@ node.set["apache"]["listen_ports"] = [ "81","444" ]
 node.set["nginx"]["server_names_hash_bucket_size"] = 2048
 
 ####################
+# Apparmor
+####################
+node.set["apparmor"]["disable"] = false
+
+####################
 # Mysql settings
 ####################
 node.set["mysql"]["bind_address"] = "127.0.0.1"
@@ -66,6 +71,7 @@ node.set["postfix"]["mydomain"] = node["domain"]
 ####################
 
 include_recipe "apt"
+include_recipe "build-essential"
 include_recipe "runit"
 include_recipe "apparmor"
 include_recipe "htop"
@@ -74,7 +80,7 @@ include_recipe "unarchivers"
 include_recipe "multitail"
 
 include_recipe "postfix"
-include_recipe "mysql::server"
+include_recipe "pressupbox::mysql_server_in_data_dir"
 
 include_recipe "php"
 include_recipe "php::module_apc"

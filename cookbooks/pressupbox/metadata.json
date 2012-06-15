@@ -10,6 +10,7 @@
   "dependencies": {
     "apache2": ">= 0.0.0",
     "apparmor": ">= 0.0.0",
+    "build-essential": ">= 0.0.0",
     "apt": ">= 0.0.0",
     "hostname": ">= 0.0.0",
     "htop": ">= 0.0.0",
@@ -42,7 +43,8 @@
   },
   "recipes": {
     "pressupbox": "Combines a set of cookbooks to create a working PressUpBox",
-    "pressupbox::mirror": "Mirror all or part of this PressUpBox to another"
+    "pressupbox::mirror": "Mirror all or part of this PressUpBox to another",
+    "pressupbox::mysql_server_in_data_dir": "Installs mysql_server with custom data_dir in Ubuntu"
   },
-  "version": "0.1.10"
+  "version": "0.3.4"
 }
