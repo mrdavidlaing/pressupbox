@@ -1,3 +1,48 @@
+Postfix setup:
+
+http://www.millcreeksys.com/how-to-configure-your-postfix-server-to-relay-email-through-amazon-simple-email-service-ses/
+
+sender_dependent_relayhost_maps = regexp:/etc/postfix/sender_dependent_relayhost
+
+ /etc/postfix/sender_dependent_relayhost:
+    somesender@millcreeksys.com  in.mailjet.com
+
+https://uk.mailjet.com/support/i-received-an-alert-for-an-unknown-sender-detection-what-should-i-do,265.htm
+
+
+http://ubuntuforums.org/archive/index.php/t-1813276.html
+
+sender_canonical_maps = regexp:/etc/postfix/sender_canonical
+
+  /etc/postfix/sender_canonical
+     /(.*?)@(.*)/ webmaster@web-angle.com
+
+static lookup:
+
+postmap -q sdfsdf@baasdr.com static:www1-new@web-angle.com
+
+query lookup:
+
+postmap -q foo@bar.com regexp:/etc/postfix/sender_canonical
+
+
+Advanced mail mangling via postfix filter:
+   http://www.postfix.org/FILTER_README.html
+
+Mailjet wants valid <email@address.com> in the From:
+  but can be "Some made up text <email@address.com>"
+
+Mail clients use Reply-To to populate the to: field when hitting reply button
+Gmail shows "via example.com" when Sender: address@example.com, or another part of message headers indicates a via
+
+A strategy:
+   (1) Use regex sender_canonical to rewrite address to "{Name} via webserver <webserver@web-angle.com>"
+   (2) Insert Reply-To: header with original From:
+   (3) relay everything through mailjet
+
+
+--------
+
 Manual setup steps:
 1.  sudo vi ~/.ssh/config 
 
