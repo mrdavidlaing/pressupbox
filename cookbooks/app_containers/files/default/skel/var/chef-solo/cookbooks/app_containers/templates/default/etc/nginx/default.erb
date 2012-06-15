@@ -13,6 +13,8 @@ server {
   server_name <%= @params[:server_name] %> <% @params[:aliases].each do |a| -%><%= " #{a}" %><% end -%>;
   root <%= @params[:web_root]%>;
 
+  disable_symlinks if_not_owner from=$document_root;
+
   access_log <%= @params[:home_dir] %>/var/log/nginx/access.log;
   access_log <%= @params[:home_dir] %>/var/log/nginx/cache-access.log cache;
   error_log <%= @params[:home_dir] %>/var/log/nginx/error.log;
@@ -42,11 +44,11 @@ server {
   proxy_no_cache $should_not_cache; 
   
   #Serve static files directly without caching
-  location ~* ^(/[_0-9a-zA-Z-]+)(/wp-.*\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|html|htm|ico))$  
+  location ~* ^(/[_0-9a-zA-Z-]+)(/wp-.*\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|xml|html|htm|ico|xls|doc|ppt|docx|xlsx|pptx))$  
   { # Extract filename in WPMU subfolder setup
     try_files $2 @apache_app_server;
   }
-  location ~* ^.+\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|html|htm|ico)$
+  location ~* ^.+\.(jpg|jpeg|gif|png|css|zip|pdf|txt|js|flv|swf|xml|html|htm|ico|xls|doc|ppt|docx|xlsx|pptx)$
   {
     try_files $uri @apache_app_server;
   }

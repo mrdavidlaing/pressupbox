@@ -54,6 +54,7 @@ node.set["nginx"]["server_names_hash_bucket_size"] = 2048
 # Mysql settings
 ####################
 node.set["mysql"]["bind_address"] = "127.0.0.1"
+node.set["mysql"]["data_dir"] = "/data/mysql"
 
 ####################
 # Postfix settings
@@ -73,7 +74,7 @@ include_recipe "unarchivers"
 include_recipe "multitail"
 
 include_recipe "postfix"
-include_recipe "mysql"
+include_recipe "mysql::server"
 
 include_recipe "php"
 include_recipe "php::module_apc"

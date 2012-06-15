@@ -24,8 +24,7 @@
     	 upload_folder << '/' unless upload_folder.end_with?('/') -%>
 	<Directory "<%=@params[:web_root]%><%=upload_folder%>">
 	    AllowOverride None  
-	    Options None        
-	    Deny from all       
+	    Options None SymLinksIfOwnerMatch      
 	    php_flag engine off 
 	</Directory>
 	<% end -%>
