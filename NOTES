@@ -1,3 +1,8 @@
+-----AWS backup instance setup
+
+http://itsecureadmin.com/2011/06/aws-instance-ebs-volume-delete-on-termination/
+
+-----------
 Postfix setup:
 
 http://www.millcreeksys.com/how-to-configure-your-postfix-server-to-relay-email-through-amazon-simple-email-service-ses/
