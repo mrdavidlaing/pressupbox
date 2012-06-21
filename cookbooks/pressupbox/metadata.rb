@@ -7,7 +7,7 @@ version          "0.3.4"
 
 recipe            "pressupbox", "Combines a set of cookbooks to create a working PressUpBox"
 recipe            "pressupbox::mirror", "Mirror all or part of this PressUpBox to another"
-recipe            "pressupbox::mysql_server_in_data_dir", "Installs mysql_server with custom data_dir in Ubuntu"
+recipe            "pressupbox::move_mysql_data_dir", "Installs mysql_server with custom data_dir in Ubuntu"
 
 depends			 "apache2"
 depends			 "apparmor"
