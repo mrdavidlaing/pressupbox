@@ -22,7 +22,8 @@ apps.each do |app_name|
   home_dir = "/data/app_containers/#{app_name}"
   admin_user = app_name
   admin_user_uid = app['id_int']
-  port = app['id_int']
+  apache_port = 81
+  admin_apache_port = 82
   aliases = app['aliases']
   admin_email = app['admin_email']
 
@@ -61,6 +62,20 @@ apps.each do |app_name|
     group "root"
     variables(:keys => keys)
     mode 0600
+  end
+
+  ############################
+  # Cleanup from old versions
+  ############################
+  bash "cleanup app_container apache2 instance" do
+    code <<-EOH
+    rm -rf #{home_dir}/etc/apache2/{conf.d,mods-enabled,mods-available}
+    rm -f #{home_dir}/etc/apache2/{.DS_Store,apache2.conf,envvars,httpd.conf,magic,ports.conf} 
+    rm -f #{home_dir}/bin/*-#{app_name}
+    rm -f /etc/apache2-#{app_name}
+    update-rc.d /etc/init.d/apache2-#{app_name} remove
+    rm -f /etc/init.d/apache2-#{app_name}
+    EOH
   end
 
   # copy in the skeleton structure
@@ -112,66 +127,6 @@ apps.each do |app_name|
     mode 0644
   end
 
-# ==================
-#  Setup app apache
-# ==================
-  # Create links to apache control programs
-  %w{apache2ctl a2ensite a2dissite a2enmod a2dismod}.each do |cmd|
-    link "#{home_dir}/bin/#{cmd}-#{app_name}" do
-      to "/usr/sbin/#{cmd}"
-    end
-  end
-
-  link "#{home_dir}/etc/apache2/mods-available" do
-      to "/etc/apache2/mods-available"
-  end
-
-  link "/etc/apache2-#{app_name}" do
-      to "#{home_dir}/etc/apache2"
-  end
-
-  template "#{home_dir}/etc/apache2/envvars" do
-    source "apache2-envvars.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:port => port, :home_dir => home_dir, :user => admin_user, :group => 'www-data')
-    mode 0640
-  end
-
-  # setup as separate service 
-  template "/etc/init.d/apache2-#{app_name}" do
-    source "initd-apache2-instancename.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:instance_name => app_name)
-    mode 0755
-  end
-  
-  # enable minimal set of mods
-  %w{env mime authz_host dir status rewrite php5 rpaf}.each do |mod|
-    execute "a2enmod-#{app_name} #{mod}" do 
-      command "#{home_dir}/bin/a2enmod-#{app_name} #{mod}" 
-      action :run
-    end
-  end
-
-  #set the apache server name
-  template "#{home_dir}/etc/apache2/conf.d/server_name" do
-    source "etc/apache2/conf.d/server_name.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:server_name => app_name)
-    mode 0755
-  end
-
-  service "apache2-#{app_name}" do
-    supports :status => true, :restart => true, :reload => true
-    action [ :enable, :restart ]
-  end
-
   # ============================
   #  Setup app management utils
   # ============================
@@ -194,7 +149,6 @@ apps.each do |app_name|
     mode 0744
   end
 
-  apache_port = node["apache"]["listen_ports"].map{|p| p.to_i}.uniq[0]
   template "#{home_dir}/var/chef-solo/process-hosting_setup.runlist.json" do
     source "var/chef-solo/process-hosting_setup.runlist.json.erb"
     action :create
@@ -206,7 +160,7 @@ apps.each do |app_name|
         :app_name => app_name, 
         :admin_user => admin_user,
         :apache_port => apache_port, 
-        :admin_apache_port => port
+        :admin_apache_port => admin_apache_port
     )
     mode 0744
   end
@@ -232,7 +186,9 @@ template "/etc/sudoers.d/app_containers" do
   mode 0440
 end
 
+###############
 # Setup each apache2 for each app_container site vhost
+###############
 template "/etc/apache2/sites-available/include_app_container_vhosts" do
   source "include_app_container_vhosts.erb"
   action :create
@@ -251,7 +207,9 @@ service "apache2" do
   action [:reload ]
 end
 
+###############
 # Setup nginx as reverse proxy for each apache app server
+###############
 template "/etc/nginx/sites-available/appcontainers_reverse_proxies" do
   source "nginx/appcontainers_reverse_proxies.erb"
   action :create

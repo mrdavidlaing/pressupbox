@@ -45,7 +45,7 @@ node.set["apache"]["prefork"]["startservers"] = (max_servers / 2).round
 node.set["apache"]["prefork"]["minspareservers"] = 5  # Apache will start new servers when fewer than this number are idle
 node.set["apache"]["prefork"]["maxspareservers"] = 10 # Apache will kill servers when more than this number are idle
 
-node.set["apache"]["listen_ports"] = [ "81","444" ]
+node.set["apache"]["listen_ports"] = [ "81","82","444" ]
 
 ####################
 # Nginx settings

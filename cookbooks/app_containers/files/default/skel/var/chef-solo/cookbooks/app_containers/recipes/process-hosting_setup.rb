@@ -48,50 +48,58 @@ hosting_setup_files.each do |hosting_setup_file|
     end
 
     # =========================
-    #  Setup apache vhost
+    #  Setup apache vhosts
     # =========================
+    if site.has_key?('admin_ips') then admin_ips = site['admin_ips'] else admin_ips = ["127.0.0.1"] end
     if site.has_key?('upload_folders') then upload_folders = site['upload_folders'] else upload_folders = [] end
     if site.has_key?('aliases') then aliases = site['aliases'] else aliases = [] end
+    vhost_params = {  
+      :host_name => node['host_name'], 
+      :server_name => site['server_name'],
+      :aliases => aliases, 
+      :admin_ips => admin_ips,
+      :app_name => node['app_name'], 
+      :admin_user => node['admin_user'],
+      :apache_port => node['apache_port'],
+      :admin_apache_port => node['admin_apache_port'], 
+      :home_dir => node['home_dir'],
+      :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
+      :upload_folders => upload_folders,
+    } 
+    #public www-data vhost
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
       owner "root"
       group "root"
-      variables(:params => {  
-        :host_name => node['host_name'], 
-        :server_name => site['server_name'],
-        :aliases => aliases, 
-        :home_dir => node['home_dir'],
-        :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
-        :upload_folders => upload_folders
-       } )
+      variables(:params => vhost_params, :apache_user => 'www-data', :apache_port => node['apache_port'])
       mode 0755
     end
-
-    execute "enable #{site['server_name']} site" do
-      command "#{node['home_dir']}/bin/a2ensite-#{node['app_name']} #{site['server_name']}"
-      action :run
+    link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}" do
+        to "../sites-available/#{site['server_name']}"
+    end
+    #admin vhost running as node['admin_user'] for admin_ips
+    template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}_admin" do
+      source "etc/apache2/#{site['type']}.erb"
+      action :create
+      owner "root"
+      group "root"
+      variables(:params => vhost_params, :apache_user => node['admin_user'], :apache_port => node['admin_apache_port'])
+      mode 0755
+    end
+    link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}_admin" do
+        to "../sites-available/#{site['server_name']}_admin"
     end
 
     # =========================
     #  Setup app reverse proxy
     # =========================
-    if site.has_key?('admin_ips') then admin_ips = site['admin_ips'] else admin_ips = ["127.0.0.1"] end
     template "#{node['home_dir']}/etc/nginx/sites-available/#{site['server_name']}" do
       source "/etc/nginx/#{site['type']}.erb"
       action :create
       owner "root"
       group "root"
-      variables(:params => { 
-        :server_name => site['server_name'], 
-        :aliases => aliases,
-        :app_name => node['app_name'], 
-        :admin_ips => admin_ips,
-        :apache_port => node['apache_port'], 
-        :admin_apache_port => node['admin_apache_port'], 
-        :home_dir => node['home_dir'],
-        :web_root => "#{node['home_dir']}/www/#{site['web_root']}"
-      } )
+      variables(:params => vhost_params)
       mode 0755
     end
  
@@ -129,10 +137,6 @@ hosting_setup_files.each do |hosting_setup_file|
 
   end #hosting_setup_conf['sites']
 end #hosting_setup_files
-
-service "apache2-#{node['app_name']}" do
- action [:restart ]
-end
 
 service "apache2" do
  action [:restart ]
