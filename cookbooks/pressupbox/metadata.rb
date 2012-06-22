@@ -3,13 +3,15 @@ maintainer_email "david@davidlaing.com"
 license          "Apache v2"
 description      "Combines a set of cookbooks to create a working PressUpBox"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.1.10"
+version          "0.4.1"
 
 recipe            "pressupbox", "Combines a set of cookbooks to create a working PressUpBox"
 recipe            "pressupbox::mirror", "Mirror all or part of this PressUpBox to another"
+recipe            "pressupbox::move_mysql_data_dir", "Installs mysql_server with custom data_dir in Ubuntu"
 
 depends			 "apache2"
 depends			 "apparmor"
+depends			 "build-essential"
 depends			 "apt"
 depends			 "hostname"
 depends			 "htop"

@@ -19,7 +19,7 @@ class Chef::Recipe
   include MemoryAllocation
 end
 
-APACHE_PROCESS_MEMORY   = 25                    #average size of resident memory used / apache process
+APACHE_PROCESS_MEMORY   = 25                    #average size of resident memory used per apache process
 memory_total = get_available_memory(node) 
 memory_used = {}
 memory_used['misc_and_cache'] = memory_total * 0.3 
@@ -27,15 +27,13 @@ memory_used['nginx']          = node["cpu"]["total"]  # given 1 nginx process / 
 memory_used['mysql']          = 150                   # TODO - what causes this to change?
 memory_used['postfix']        = 15  
 
-data_bag('apps').each do |app|
-	memory_used["apache_#{app}"] = APACHE_PROCESS_MEMORY * 2
-end
-
 memory_used['apache_public']  = get_memory_remaining(memory_total, memory_used)
 
 ####################
 # Apache settings
 ####################
+node.set["apache"]["package"] = "apache2-mpm-itk"
+
 max_servers = (memory_used['apache_public'] / APACHE_PROCESS_MEMORY).round
 node.set["apache"]["prefork"]["serverlimit"] = max_servers
 node.set["apache"]["prefork"]["maxclients"] = max_servers
@@ -43,7 +41,7 @@ node.set["apache"]["prefork"]["startservers"] = (max_servers / 2).round
 node.set["apache"]["prefork"]["minspareservers"] = 5  # Apache will start new servers when fewer than this number are idle
 node.set["apache"]["prefork"]["maxspareservers"] = 10 # Apache will kill servers when more than this number are idle
 
-node.set["apache"]["listen_ports"] = [ "81","444" ]
+node.set["apache"]["listen_ports"] = [ "81","82","444" ]
 
 ####################
 # Nginx settings
@@ -54,7 +52,6 @@ node.set["nginx"]["server_names_hash_bucket_size"] = 2048
 # Mysql settings
 ####################
 node.set["mysql"]["bind_address"] = "127.0.0.1"
-node.set["mysql"]["data_dir"] = "/data/mysql"
 
 ####################
 # Postfix settings
@@ -66,8 +63,8 @@ node.set["postfix"]["mydomain"] = node["domain"]
 ####################
 
 include_recipe "apt"
+include_recipe "build-essential"
 include_recipe "runit"
-include_recipe "apparmor"
 include_recipe "htop"
 include_recipe "timezone"
 include_recipe "unarchivers"
@@ -75,6 +72,7 @@ include_recipe "multitail"
 
 include_recipe "postfix"
 include_recipe "mysql::server"
+include_recipe "pressupbox::move_mysql_data_dir"
 
 include_recipe "php"
 include_recipe "php::module_apc"

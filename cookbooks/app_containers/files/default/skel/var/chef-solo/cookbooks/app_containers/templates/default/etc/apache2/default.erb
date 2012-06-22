@@ -3,7 +3,7 @@
     @params[:web_root] << '/' unless @params[:web_root].end_with?('/')
 -%>
 
-<VirtualHost *:${APACHE_PORT}>
+<VirtualHost <%= "*:#{@apache_port}" %>>
 	SetEnv SERVER_HOSTNAME <%= @params[:host_name] %>
 	ServerName <%= @params[:server_name] %>
 	<% @params[:aliases].each do |a| -%>
@@ -38,7 +38,11 @@
 	CustomLog <%= @params[:home_dir]%>var/log/apache2/access.log combined
 
     <IfModule php5_module>
-            php_value newrelic.appname "<%= @params[:server_name] %>"
+        php_value newrelic.appname "<%= @params[:server_name] %>"
     </IfModule>
+
+    <IfModule mpm_itk_module>
+		AssignUserId <%= @apache_user %> www-data
+	</IfModule>
 
 </VirtualHost>
