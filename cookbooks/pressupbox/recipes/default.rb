@@ -19,17 +19,13 @@ class Chef::Recipe
   include MemoryAllocation
 end
 
-APACHE_PROCESS_MEMORY   = 25                    #average size of resident memory used / apache process
+APACHE_PROCESS_MEMORY   = 25                    #average size of resident memory used per apache process
 memory_total = get_available_memory(node) 
 memory_used = {}
 memory_used['misc_and_cache'] = memory_total * 0.3 
 memory_used['nginx']          = node["cpu"]["total"]  # given 1 nginx process / CPU and ~1MB / process
 memory_used['mysql']          = 150                   # TODO - what causes this to change?
 memory_used['postfix']        = 15  
-
-data_bag('apps').each do |app|
-	memory_used["apache_#{app}"] = APACHE_PROCESS_MEMORY * 2
-end
 
 memory_used['apache_public']  = get_memory_remaining(memory_total, memory_used)
 
