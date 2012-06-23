@@ -189,8 +189,9 @@ apps.each do |app_name|
         :app_name => app_name, 
         :admin_user => admin_user,
         :apache_port => apache_port, 
-        :admin_apache_port => admin_apache_port
-    )
+        :admin_apache_port => admin_apache_port,
+        :mysql_password => mysql_password
+    ) 
     mode 0744
   end
 

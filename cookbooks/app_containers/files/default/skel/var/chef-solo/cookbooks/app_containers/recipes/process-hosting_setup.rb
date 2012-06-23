@@ -65,6 +65,9 @@ hosting_setup_files.each do |hosting_setup_file|
       :home_dir => node['home_dir'],
       :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
       :upload_folders => upload_folders,
+      :db_name => site['db_name'],
+      :db_user => node['admin_user'],
+      :db_password => node['mysql_password'],
     } 
     #public www-data vhost
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do

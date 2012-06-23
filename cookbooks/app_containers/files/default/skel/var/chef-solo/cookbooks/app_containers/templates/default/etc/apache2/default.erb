@@ -5,6 +5,9 @@
 
 <VirtualHost <%= "*:#{@apache_port}" %>>
 	SetEnv SERVER_HOSTNAME <%= @params[:host_name] %>
+	SetEnv DB_NAME "<%= @params[:db_name] %>"
+    SetEnv DB_USER "<%= @params[:db_user] %>"
+    SetEnv DB_PASSWORD "<%= @params[:db_password] %>"
 	ServerName <%= @params[:server_name] %>
 	<% @params[:aliases].each do |a| -%>
 	ServerAlias <%= " #{a}" %>
