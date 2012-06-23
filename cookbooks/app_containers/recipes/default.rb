@@ -13,6 +13,16 @@ directory "/data/app_containers" do
   recursive true
 end
 
+#Ensure root user MySQL credentials are set in /root/.my.cnf
+template "/root/.my.cnf" do
+  source "my.cnf.erb"
+  action :create
+  owner "root"
+  group "root"
+  variables(:user => "root", :password => node['mysql']['server_root_password'])
+  mode 0600
+end
+
 # Now create an admin & an www user for each app
 apps.each do |app_name|
   
@@ -26,6 +36,7 @@ apps.each do |app_name|
   admin_apache_port = 82
   aliases = app['aliases']
   admin_email = app['admin_email']
+  mysql_password = app['mysql_password']
 
   user(admin_user) do
     uid       admin_user_uid
@@ -122,9 +133,27 @@ apps.each do |app_name|
     source "forward.erb"
     action :create
     owner admin_user
-    group 'www-data'
+    group 'root'
     variables(:admin_email => admin_email)
     mode 0644
+  end
+
+  # ============================
+  # Configure a mysql user
+  # ============================
+  #http://stackoverflow.com/questions/4528393/mysql-create-user-only-when-the-user-doesnt-exist/5415585#5415585
+  execute "Create MySQL user #{admin_user} and grant access to all DBs starting with #{admin_user}_" do
+    command "mysql --execute \"GRANT ALL PRIVILEGES ON \\`#{admin_user}_%\\`.* TO '#{admin_user}'@'localhost' IDENTIFIED BY '#{mysql_password}';\""
+    action :nothing
+  end
+  template "#{home_dir}/.my.cnf" do
+    source "my.cnf.erb"
+    action :create
+    owner admin_user
+    group "root"
+    variables(:user => admin_user, :password => mysql_password)
+    mode 0600
+    notifies :run, resources(:execute => "Create MySQL user #{admin_user} and grant access to all DBs starting with #{admin_user}_")
   end
 
   # ============================

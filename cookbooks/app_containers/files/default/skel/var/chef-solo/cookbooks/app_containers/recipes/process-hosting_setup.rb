@@ -37,12 +37,12 @@ hosting_setup_files.each do |hosting_setup_file|
     #  Setup database
     # =========================
     if (site.has_key?('db_name')) then
-      if (not site['db_name'].startswith("#{node['app_name']}_")) then
+      if (not site['db_name'].start_with?("#{node['app_name']}_")) then
         Chef::Log.error "db_name provided: (#{site['db_name']}) MUST start with app_container_name: #{node['app_name']}_"
         throw error
       end
       execute "Create mysql DB: #{site['db_name']}" do
-        command "mysql --execute \"'CREATE DATABASE IF NOT EXISTS #{site['db_name']};'\""
+        command "mysql --execute \"CREATE DATABASE IF NOT EXISTS \\`#{site['db_name']}\\`;\""
         action :run
       end
     end
