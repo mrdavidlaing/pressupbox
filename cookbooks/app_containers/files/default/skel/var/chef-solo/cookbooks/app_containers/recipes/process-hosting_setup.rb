@@ -42,7 +42,7 @@ hosting_setup_files.each do |hosting_setup_file|
         throw error
       end
       execute "Create mysql DB: #{site['db_name']}" do
-        command "mysql --execute \"CREATE DATABASE IF NOT EXISTS \\`#{site['db_name']}\\`;\""
+        command "sudo -H mysql --execute \"CREATE DATABASE IF NOT EXISTS \\`#{site['db_name']}\\`;\""
         action :run
       end
     end
