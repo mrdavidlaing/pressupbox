@@ -50,6 +50,21 @@ KeepAliveTimeout <%= node[:apache][:keepalivetimeout] %>
 ## Server-Pool Size Regulation (MPM specific)
 ## 
 
+# itk (similar to prefork) MPM
+# StartServers: number of server processes to start
+# MinSpareServers: minimum number of server processes which are kept spare
+# MaxSpareServers: maximum number of server processes which are kept spare
+# MaxClients: maximum number of server processes allowed to start
+# MaxRequestsPerChild: maximum number of requests a server process serves
+<IfModule mpm_itk_module>
+    StartServers          <%= node[:apache][:prefork][:startservers] %>
+    MinSpareServers       <%= node[:apache][:prefork][:minspareservers] %>
+    MaxSpareServers       <%= node[:apache][:prefork][:maxspareservers] %>
+    ServerLimit           <%= node[:apache][:prefork][:serverlimit] %>
+    MaxClients            <%= node[:apache][:prefork][:maxclients] %>
+    MaxRequestsPerChild   <%= node[:apache][:prefork][:maxrequestsperchild] %>
+</IfModule>
+
 # prefork MPM
 # StartServers: number of server processes to start
 # MinSpareServers: minimum number of server processes which are kept spare
