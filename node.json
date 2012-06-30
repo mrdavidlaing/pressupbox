@@ -1,0 +1,9 @@
+{
+  "set_fqdn": "set.node.fqdn",
+  "mysql" : {
+      "server_root_password" => "changeme",
+      "server_repl_password" => "changeme",
+      "server_debian_password" => "changeme"
+  },
+  "run_list": [ "recipe[pressupbox]" ]
+}
