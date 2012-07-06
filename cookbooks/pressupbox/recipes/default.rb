@@ -72,7 +72,6 @@ include_recipe "multitail"
 
 include_recipe "postfix"
 include_recipe "mysql::server"
-include_recipe "pressupbox::move_mysql_data_dir"
 
 include_recipe "php"
 include_recipe "php::module_apc"
