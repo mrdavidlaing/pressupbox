@@ -1,0 +1,30 @@
+{
+  "name": "apache2-mpm-itk",
+  "description": "Under Ubuntu 12.04, this creates a secondary apache service, running the mpm-itk worker",
+  "long_description": "",
+  "maintainer": "David Laing",
+  "maintainer_email": "david@davidlaing.com",
+  "license": "none",
+  "platforms": {
+  },
+  "dependencies": {
+    "apache2": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.1.0"
+}

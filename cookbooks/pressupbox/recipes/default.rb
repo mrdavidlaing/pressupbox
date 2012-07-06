@@ -32,8 +32,6 @@ memory_used['apache_public']  = get_memory_remaining(memory_total, memory_used)
 ####################
 # Apache settings
 ####################
-node.set["apache"]["package"] = "apache2-mpm-itk"
-
 max_servers = (memory_used['apache_public'] / APACHE_PROCESS_MEMORY).round
 node.set["apache"]["prefork"]["serverlimit"] = max_servers
 node.set["apache"]["prefork"]["maxclients"] = max_servers
@@ -41,7 +39,7 @@ node.set["apache"]["prefork"]["startservers"] = (max_servers / 2).round
 node.set["apache"]["prefork"]["minspareservers"] = 5  # Apache will start new servers when fewer than this number are idle
 node.set["apache"]["prefork"]["maxspareservers"] = 10 # Apache will kill servers when more than this number are idle
 
-node.set["apache"]["listen_ports"] = [ "81","82","444" ]
+node.set["apache"]["listen_ports"] = [ "81" ]
 
 ####################
 # Nginx settings
@@ -77,9 +75,10 @@ include_recipe "php"
 include_recipe "php::module_apc"
 include_recipe "php::module_mysql"
 
-include_recipe "apache2"
+include_recipe "apache2::default"
 include_recipe "apache2::mod_php5"
 include_recipe "apache2::mod_rpaf"
+include_recipe "apache2-mpm-itk::default"
 
 include_recipe "nginx::install_from_package"
 include_recipe "nginx::setup_reverse_proxy_cache"
