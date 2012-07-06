@@ -16,6 +16,7 @@ sites:
     aliases: 
       - *.wordpress.pressupbox-test
     web_root: "test_repo/default"
+    db_name: "app_container1_wordpress"
     upload_folders: #relative to www_root
       - "wp-content/uploads"
       - "wp-content/blogs.dir"
