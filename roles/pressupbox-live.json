@@ -1,1 +1,0 @@
-{"name":"pressupbox-live","description":"A production PressUp box, used for hosting app_containers","json_class":"Chef::Role","default_attributes":{},"override_attributes":{},"chef_type":"role","run_list":["role[pressupbox-live]","recipe[pressupbox]"],"env_run_lists":{}}
