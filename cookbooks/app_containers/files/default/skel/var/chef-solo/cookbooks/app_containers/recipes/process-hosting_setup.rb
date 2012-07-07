@@ -60,6 +60,8 @@ hosting_setup_files.each do |hosting_setup_file|
       :admin_ips => admin_ips,
       :app_name => node['app_name'], 
       :admin_user => node['admin_user'],
+      :apache_port => node['apache_port'],
+      :admin_apache_port => node['admin_apache_port'], 
       :home_dir => node['home_dir'],
       :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
       :upload_folders => upload_folders,
