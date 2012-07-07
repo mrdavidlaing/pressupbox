@@ -237,6 +237,11 @@ service "apache2" do
   action [:reload ]
 end
 
+service "apache2-mpm-itk" do
+  supports :reload => true
+  action [:reload ]
+end
+
 ###############
 # Setup nginx as reverse proxy for each apache app server
 ###############

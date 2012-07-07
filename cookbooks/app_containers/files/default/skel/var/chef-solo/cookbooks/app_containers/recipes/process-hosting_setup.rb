@@ -48,7 +48,7 @@ hosting_setup_files.each do |hosting_setup_file|
     end
 
     # =========================
-    #  Setup apache vhosts
+    #  Setup apache vhost
     # =========================
     if site.has_key?('admin_ips') then admin_ips = site['admin_ips'] else admin_ips = ["127.0.0.1"] end
     if site.has_key?('upload_folders') then upload_folders = site['upload_folders'] else upload_folders = [] end
@@ -140,6 +140,10 @@ hosting_setup_files.each do |hosting_setup_file|
 
   end #hosting_setup_conf['sites']
 end #hosting_setup_files
+
+service "apache2-mpm-itk" do
+ action [:restart ]
+end
 
 service "apache2" do
  action [:restart ]
