@@ -45,7 +45,7 @@
     </IfModule>
 
     <IfModule mpm_itk_module>
-		AssignUserId <%= @apache_user %> www-data
+		AssignUserId <%= @apache_mpm_itk_user %> www-data
 	</IfModule>
 
 </VirtualHost>

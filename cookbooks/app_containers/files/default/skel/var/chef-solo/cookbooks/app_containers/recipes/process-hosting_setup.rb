@@ -60,8 +60,6 @@ hosting_setup_files.each do |hosting_setup_file|
       :admin_ips => admin_ips,
       :app_name => node['app_name'], 
       :admin_user => node['admin_user'],
-      :apache_port => node['apache_port'],
-      :admin_apache_port => node['admin_apache_port'], 
       :home_dir => node['home_dir'],
       :web_root => "#{node['home_dir']}/www/#{site['web_root']}",
       :upload_folders => upload_folders,
@@ -69,25 +67,12 @@ hosting_setup_files.each do |hosting_setup_file|
       :db_user => node['admin_user'],
       :db_password => node['mysql_password'],
     } 
-    #public www-data vhost
-    template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
-      source "etc/apache2/#{site['type']}.erb"
-      action :create
-      owner "root"
-      group "root"
-      variables(:params => vhost_params, :apache_user => 'www-data', :apache_port => node['apache_port'])
-      mode 0755
-    end
-    link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}" do
-        to "../sites-available/#{site['server_name']}"
-    end
-    #admin vhost running as node['admin_user'] for admin_ips
     template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}_admin" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
       owner "root"
       group "root"
-      variables(:params => vhost_params, :apache_user => node['admin_user'], :apache_port => node['admin_apache_port'])
+      variables(:params => vhost_params, :apache_mpm_itk_user => node['admin_user'])
       mode 0755
     end
     link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}_admin" do
