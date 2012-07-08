@@ -81,6 +81,7 @@ apps.each do |app_name|
   bash "cleanup app_container apache2 instance" do
     code <<-EOH
     rm -rf #{home_dir}/etc/apache2/{conf.d,mods-enabled,mods-available}
+    rm -f #{home_dir}/etc/apache2/sites-{available,enabled}/*_admin
     rm -f #{home_dir}/etc/apache2/{.DS_Store,apache2.conf,envvars,httpd.conf,magic,ports.conf} 
     rm -f #{home_dir}/bin/*-#{app_name}
     rm -f /etc/apache2-#{app_name}
