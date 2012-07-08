@@ -69,7 +69,7 @@ hosting_setup_files.each do |hosting_setup_file|
       :db_user => node['admin_user'],
       :db_password => node['mysql_password'],
     } 
-    template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}_admin" do
+    template "#{node['home_dir']}/etc/apache2/sites-available/#{site['server_name']}" do
       source "etc/apache2/#{site['type']}.erb"
       action :create
       owner "root"
@@ -77,8 +77,8 @@ hosting_setup_files.each do |hosting_setup_file|
       variables(:params => vhost_params, :apache_mpm_itk_user => node['admin_user'])
       mode 0755
     end
-    link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}_admin" do
-        to "../sites-available/#{site['server_name']}_admin"
+    link "#{node['home_dir']}/etc/apache2/sites-enabled/#{site['server_name']}" do
+        to "../sites-available/#{site['server_name']}"
     end
 
     # =========================
