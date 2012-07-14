@@ -13,6 +13,7 @@ Vagrant::Config.run do |config|
 
   use_nfs = !(Vagrant::Util::Platform.windows?)
   config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", "samples/app_container1/www/test_repo", :nfs => use_nfs)
+  config.vm.share_folder("app_container1-forsitethemes", "/data/app_containers/forsitethemes/www/forsitethemes", "/Users/mrdavidlaing/Projects/defries/forsitethemes", :nfs => use_nfs)
 
   config.vm.provision :chef_solo do |chef|
 
@@ -21,10 +22,13 @@ Vagrant::Config.run do |config|
     chef.log_level      = :debug
     
     #recipes added in pressupbox-live role
-    chef.add_recipe     "pressupbox::default"
+    #chef.add_recipe     "pressupbox::default"
+
+    #chef.add_recipe     "apache2-mpm-itk::default"
 
     #recipes under development
-    
+    chef.add_recipe     "app_containers::default"
+
     #chef.add_recipe     "ossec::default"
     
     #chef.add_recipe     "php::module_xdebug"

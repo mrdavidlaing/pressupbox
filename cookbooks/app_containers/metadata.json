@@ -8,6 +8,7 @@
   "platforms": {
   },
   "dependencies": {
+    "bash_for_hipsters": ">= 0.0.0"
   },
   "recommendations": {
   },
@@ -25,5 +26,5 @@
   },
   "recipes": {
   },
-  "version": "0.15"
+  "version": "0.16.0"
 }

@@ -1,3 +1,5 @@
+include_recipe "bash_for_hipsters"
+
 Chef::Log.info "making containers"
 
 # Load the keys of the items in the 'admins' data bag
@@ -137,6 +139,12 @@ apps.each do |app_name|
     group 'root'
     variables(:admin_email => admin_email)
     mode 0644
+  end
+
+  bash_for_hipsters_bash_for_hipsters "configure cool bash prompt" do
+    home_dir "#{home_dir}"
+    username "#{admin_user}"
+    action :create
   end
 
   # ============================
