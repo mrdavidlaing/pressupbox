@@ -49,12 +49,18 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-SPARK=`tail --lines=2000 ~/var/log/nginx/access.log | cut -d\  -f 4 | cut -d/ -f 1 | uniq -c | awk '{print $1}'| /var/local/bash_for_hipsters/spark`
+parse_git_branch() {
+   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+
+show_daily_web_traffic() {
+ tail --lines=2000 ~/var/log/nginx/access.log | cut -d\  -f 4 | cut -d/ -f 1 | uniq -c | awk '{print $1}'| /var/local/bash_for_hipsters/spark
+}
 
 if [ "$color_prompt" = yes ]; then
-    PS1='Hits today: $SPARK\n${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='\n[ ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch) ][ Hits today: $(show_daily_web_traffic) ]\n\$ '
 else
-    PS1='Hits today: $SPARK\n${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='\n[ ${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch) ][ Hits today: $(show_daily_web_traffic) ]\n\$ '
 fi
 unset color_prompt force_color_prompt
 

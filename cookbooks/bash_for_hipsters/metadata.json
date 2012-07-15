@@ -26,5 +26,5 @@
   "recipes": {
     "default": "Install helper scripts to /var/local/bash_for_hipsters"
   },
-  "version": "0.0.1"
+  "version": "0.1.0"
 }
