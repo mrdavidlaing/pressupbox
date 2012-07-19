@@ -8,7 +8,12 @@
   "platforms": {
   },
   "dependencies": {
-    "bash_for_hipsters": ">= 0.0.0"
+    "apache2": ">= 0.0.0",
+    "apache2-mpm-itk": ">= 0.0.0",
+    "bash_for_hipsters": ">= 0.0.0",
+    "logrotate": ">= 0.0.0",
+    "nginx": ">= 0.0.0",
+    "mysql": ">= 0.0.0"
   },
   "recommendations": {
   },
@@ -26,5 +31,5 @@
   },
   "recipes": {
   },
-  "version": "0.16.0"
+  "version": "0.17.0"
 }

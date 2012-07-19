@@ -213,6 +213,25 @@ apps.each do |app_name|
     mode 0755
   end
 
+  ##############################
+  # Ensure logs are rotated daily
+  ##############################
+  logrotate_app "#{admin_user}_apache2_logs" do
+    cookbook "logrotate"
+    path [ "#{home_dir}/var/log/apache2/access.log", "#{home_dir}/var/log/apache2/error.log" ]
+    frequency "daily"
+    create "644 #{admin_user} adm"
+    rotate 30
+  end
+
+  logrotate_app "#{admin_user}_nginx_logs" do
+    cookbook "logrotate"
+    path [ "#{home_dir}/var/log/nginx/access.log", "#{home_dir}/var/log/nginx/cache-access.log", "#{home_dir}/var/log/nginx/error.log" ]
+    frequency "daily"
+    create "644 #{admin_user} adm"
+    rotate 30
+  end
+
 end
 
 #Enable app_container users to run ~/bin/* scripts as sudo
