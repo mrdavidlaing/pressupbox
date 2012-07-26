@@ -44,13 +44,13 @@ else
      command "sudo service mysql start"
   end
 
-  unless Chef::Config[:solo]
-    ruby_block 'Save updated mysql_data dir for next run' do
-      block do
-        node.set["mysql"]["data_dir"] = new_data_dir
-        node.save
-      end
-    end
-  end
+
+	ruby_block 'Save updated mysql_data dir for next run' do
+	  block do
+	    node.set["mysql"]["data_dir"] = new_data_dir
+	    node.save
+	  end
+	  only_if { Chef::Config[:solo] }
+	end
 
 end

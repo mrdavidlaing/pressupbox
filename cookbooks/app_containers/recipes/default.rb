@@ -142,8 +142,8 @@ apps.each do |app_name|
   end
 
   bash_for_hipsters_bash_for_hipsters "configure cool bash prompt" do
-    home_dir "#{home_dir}"
-    username "#{admin_user}"
+    home_dir home_dir
+    username admin_user
     action :create
   end
 
