@@ -6,18 +6,10 @@
   "maintainer_email": "cookbooks@opscode.com",
   "license": "Apache 2.0",
   "platforms": {
-    "redhat": [
-
-    ],
-    "centos": [
-
-    ],
-    "debian": [
-
-    ],
-    "ubuntu": [
-
-    ]
+    "redhat": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "debian": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0"
   },
   "dependencies": {
   },
