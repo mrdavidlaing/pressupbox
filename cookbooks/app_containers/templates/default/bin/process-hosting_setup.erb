@@ -1,2 +1,34 @@
 #!/bin/bash
-chef-solo -c <%= @home_dir %>/var/chef-solo/solo.rb  -j <%= @home_dir %>/var/chef-solo/process-hosting_setup.runlist.json
+#Executes chef recipe pressupbox::process-hosting_setup.  Must be run as root (ie, via sudo)
+
+if [ "$(whoami)" != "root" ]; then
+    echo "This script must be run as root. Try again prefixing sudo - eg: $ sudo process-hosting_setup"
+    exit 1
+fi
+
+<% if (@is_solo) %>
+SOLO_RB="/tmp/<%= @app_name%>_solo.rb"
+cat > $SOLO_RB <<EOF
+cookbook_path [<%= @cookbook_paths.map { |c| "\"#{c}\"" }.join(',') %>]
+EOF
+<% end %>
+
+DNA_JSON="/tmp/<%= @app_name%>_dna_process-hosting_setup.json"
+cat > $DNA_JSON <<EOF
+{ 
+	"host_name": "<%= @host_name%>",
+	"home_dir": "<%= @home_dir%>",
+	"app_name": "<%= @app_name%>",
+	"admin_user": "<%= @admin_user %>",
+	"apache_port": <%= @apache_port%>,
+	"admin_apache_port": <%= @admin_apache_port%>,
+	"mysql_password":"<%= @mysql_password %>",
+	"run_list": [ "recipe[pressupbox::process-hosting_setup]" ] 
+}
+EOF
+
+<% if (@is_solo) %>
+chef-solo -c $SOLO_RB  -j $DNA_JSON
+<% else %>
+chef-client -j $DNA_JSON
+<% end %>

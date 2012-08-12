@@ -92,6 +92,13 @@ apps.each do |app_name|
     EOH
   end
 
+  bash "cleanup old embedded chef-solo" do
+    code <<-EOH
+    rm -rf #{home_dir}/var/chef-solo
+    EOH
+  end
+      
+
   # copy in the skeleton structure
   remote_directory home_dir do
     source "skel"
@@ -178,21 +185,14 @@ apps.each do |app_name|
     mode 0755
   end
 
-  template "#{home_dir}/var/chef-solo/solo.rb" do
-    source "var/chef-solo/solo.rb.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:home_dir => home_dir)
-    mode 0744
-  end
-
-  template "#{home_dir}/var/chef-solo/process-hosting_setup.runlist.json" do
-    source "var/chef-solo/process-hosting_setup.runlist.json.erb"
+  template "#{home_dir}/bin/process-hosting_setup" do
+    source "bin/process-hosting_setup.erb"
     action :create
     owner "root"
     group "root"
     variables(
+        :cookbook_paths => Chef::Config[:cookbook_path], 
+        :is_solo => Chef::Config[:solo],
         :host_name => node["hostname"], 
         :home_dir => home_dir, 
         :app_name => app_name, 
@@ -201,15 +201,6 @@ apps.each do |app_name|
         :admin_apache_port => admin_apache_port,
         :mysql_password => mysql_password
     ) 
-    mode 0744
-  end
-
-  template "#{home_dir}/bin/process-hosting_setup" do
-    source "bin/process-hosting_setup.erb"
-    action :create
-    owner "root"
-    group "root"
-    variables(:home_dir => home_dir)
     mode 0755
   end
 

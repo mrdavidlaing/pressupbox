@@ -24,7 +24,9 @@ Vagrant::Config.run do |config|
     chef.log_level      = :debug
     
     #recipes added in pressupbox-live role
-    chef.add_recipe     "pressupbox::default"
+    chef.add_recipe     "app_containers::default"
+    #chef.add_recipe     "pressupbox::default"
+
 
     #chef.add_recipe     "apache2-mpm-itk::default"
 
