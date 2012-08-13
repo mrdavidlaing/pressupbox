@@ -1,0 +1,9 @@
+{
+  "set_fqdn": "full.server.domain.com",
+  "mysql" : {
+      "server_root_password" : "change_me",
+      "server_repl_password" : "change_me",
+      "server_debian_password" : "change_me"
+  },
+  "run_list": [ "recipe[pressupbox]" ]
+}

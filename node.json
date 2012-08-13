@@ -1,9 +1,0 @@
-{
-  "set_fqdn": "www1-new-backup.web-angle.com",
-  "mysql" : {
-      "server_root_password" : "largeheadcatfootball",
-      "server_repl_password" : "largeheadcatfootball",
-      "server_debian_password" : "largeheadcatfootball"
-  },
-  "run_list": [ "recipe[pressupbox]" ]
-}
