@@ -1,6 +1,13 @@
 #!/usr/bin/env rake
 require 'rake/testtask'
 
+desc "Initialise / update chef cookbooks as defined in ./Cheffile"
+task :update_chef_repo do
+	puts "Initializing chef repo using ./Cheffile"
+	puts `librarian-chef update` 
+	puts `librarian-chef show` 
+end
+
 Rake::TestTask.new do |t|
   t.libs.push "lib"
   t.test_files = FileList['cookbooks/test/**/*_spec.rb']

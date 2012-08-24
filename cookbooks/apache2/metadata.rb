@@ -3,7 +3,7 @@ maintainer_email  "cookbooks@opscode.com"
 license           "Apache 2.0"
 description       "Installs and configures all aspects of apache2 using Debian style symlinks with helper definitions"
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           "1.3.4"
+version           "1.1.12"
 recipe            "apache2", "Main Apache configuration"
 recipe            "apache2::mod_alias", "Apache module 'alias' with config file"
 recipe            "apache2::mod_apreq2", "Apache module 'apreq'"
@@ -39,13 +39,12 @@ recipe            "apache2::mod_proxy_connect", "Apache module 'proxy_connect'"
 recipe            "apache2::mod_proxy_http", "Apache module 'proxy_http'"
 recipe            "apache2::mod_python", "Apache module 'python'"
 recipe            "apache2::mod_rewrite", "Apache module 'rewrite'"
-recipe            "apache2::mod_rpaf", "Apache module 'rpaf'"
 recipe            "apache2::mod_setenvif", "Apache module 'setenvif' with config file"
 recipe            "apache2::mod_ssl", "Apache module 'ssl' with config file, adds port 443 to listen_ports"
 recipe            "apache2::mod_status", "Apache module 'status' with config file"
 recipe            "apache2::mod_xsendfile", "Apache module 'xsendfile'"
 
-%w{redhat centos scientific fedora debian ubuntu arch freebsd}.each do |os|
+%w{redhat centos scientific fedora debian ubuntu arch freebsd amazon}.each do |os|
   supports os
 end
 
@@ -74,7 +73,7 @@ attribute "apache/binary",
   :description => "Apache server daemon program",
   :default => "/usr/sbin/apache2"
 
-attribute "apache/icondir", 
+attribute "apache/icondir",
   :display_name => "Apache Icondir",
   :description => "Directory location for icons",
   :default => "/usr/share/apache2/icons"
@@ -203,4 +202,4 @@ attribute "apache/worker/maxrequestsperchild",
 attribute "apache/default_modules",
   :display_name => "Apache Default Modules",
   :description => "Default modules to enable via recipes",
-  :default => "status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex dir env mime negotiation setenvif rpaf"
+  :default => "status alias auth_basic authn_file authz_default authz_groupfile authz_host authz_user autoindex dir env mime negotiation setenvif"
