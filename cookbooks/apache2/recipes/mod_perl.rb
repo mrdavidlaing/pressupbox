@@ -19,14 +19,18 @@
 # limitations under the License.
 #
 
-case node['platform']
+case node[:platform]
   when "debian", "ubuntu"
-    %w{libapache2-mod-perl2 libapache2-request-perl apache2-mpm-prefork}.each do |pkg|
-      package pkg do
-        action :install
-      end
+    package "libapache2-mod-perl2" do
+      action :install
     end
-  when "centos", "redhat", "fedora", "amazon", "scientific"
+   package "libapache2-request-perl" do
+      action :install
+   end
+   package "apache2-mpm-prefork" do
+      action :install
+   end
+  when "centos", "redhat", "fedora"
     package "mod_perl" do
       action :install
       notifies :run, resources(:execute => "generate-module-list"), :immediately

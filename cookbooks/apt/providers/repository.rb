@@ -28,17 +28,6 @@ def install_key_from_keyserver(key, keyserver)
   end
 end
 
-# run command and extract gpg ids
-def extract_gpg_ids_from_cmd(cmd)
-  so = Mixlib::ShellOut.new(cmd)
-  so.run_command
-  so.stdout.split(/\n/).collect do |t|
-    if z = t.match(/^pub\s+\d+\w\/([0-9A-F]{8})/)
-      z[1]
-    end
-  end.compact
-end
-
 # install apt key from URI
 def install_key_from_uri(uri)
   key_name = uri.split(/\//).last
@@ -60,15 +49,11 @@ def install_key_from_uri(uri)
 
   r.run_action(:create)
 
-  installed_ids = extract_gpg_ids_from_cmd("apt-key finger")
-  key_ids = extract_gpg_ids_from_cmd("gpg --with-fingerprint #{cached_keyfile}")
-  unless installed_ids & key_ids == key_ids
-    execute "install-key #{key_name}" do
-      command "apt-key add #{cached_keyfile}"
-      action :nothing
-    end.run_action(:run)
-    new_resource.updated_by_last_action(true)
-  end
+  execute "install-key #{key_name}" do
+    command "apt-key add #{cached_keyfile}"
+    action :nothing
+  end.run_action(:run)
+  new_resource.updated_by_last_action(true)
 end
 
 # build repo file contents
@@ -90,29 +75,31 @@ action :add do
       install_key_from_uri(new_resource.key)
     end
 
-    execute "apt-get update" do
-      ignore_failure true
-      action :nothing
-    end
-
-  file "/var/lib/apt/periodic/update-success-stamp" do
-    action :nothing
-  end
-
     # build repo file
     repository = build_repo(new_resource.uri,
                             new_resource.distribution,
                             new_resource.components,
                             new_resource.deb_src)
 
-    file "/etc/apt/sources.list.d/#{new_resource.repo_name}-source.list" do
+    repo_file = file "/etc/apt/sources.list.d/#{new_resource.repo_name}-source.list" do
       owner "root"
       group "root"
       mode 0644
       content repository
-      action :create
-    notifies :delete, resources(:file => "/var/lib/apt/periodic/update-success-stamp"), :immediately
-    notifies :run, resources(:execute => "apt-get update"), :immediately
+      action :nothing
+    end
+
+    # write out the repo file, replace it if it already exists
+    repo_file.run_action(:create)
+
+    apt_get_update = execute "apt-get update" do
+      ignore_failure true
+      action :nothing
+    end
+
+    if repo_file.updated_by_last_action?
+      new_resource.updated_by_last_action(true)
+      apt_get_update.run_action(:run)
     end
 end
 

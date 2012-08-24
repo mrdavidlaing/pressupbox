@@ -34,6 +34,10 @@ pkgs.each do |pkg|
   end
 end
 
+package 'php5-fpm' do
+    action :remove
+end
+
 template "#{node['php']['conf_dir']}/php.ini" do
   source "php.ini.erb"
   owner "root"
