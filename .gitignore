@@ -4,5 +4,5 @@ node.json
 scratchpad/
 .chef/
 .ec2/
-# /cookbooks
+/cookbooks
 /tmp
