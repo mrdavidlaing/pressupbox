@@ -9,7 +9,10 @@ cookbook 'runit', '0.13.0'
 cookbook 'timezone', '0.0.1'
 cookbook 'postfix', '1.2.0'
 cookbook 'mysql', '1.3.0'
-cookbook 'php'
+cookbook 'hostname', '0.0.2'
+cookbook 'php', '1.0.2'
+cookbook 'nginx', '0.101.6'
+cookbook 'logrotate', '0.8.2'
 
 cookbook 'apt',
   :git => 'https://github.com/mrdavidlaing/apt'

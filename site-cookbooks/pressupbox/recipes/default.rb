@@ -86,7 +86,7 @@ include_recipe "wrapper_apache2::mod_rpaf"
 
 include_recipe "apache2-mpm-itk::default"
 
-include_recipe "wrapper_nginx::install_from_package"
+include_recipe "nginx"
 include_recipe "wrapper_nginx::setup_reverse_proxy_cache"
 
 include_recipe "app_containers"
