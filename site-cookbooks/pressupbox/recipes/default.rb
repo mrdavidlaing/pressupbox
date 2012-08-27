@@ -45,6 +45,9 @@ node.set["apache"]["listen_ports"] = [ "81" ]
 # Nginx settings
 ####################
 node.set["nginx"]["server_names_hash_bucket_size"] = 2048
+node.set["nginx"]["variables_hash_max_size"] = 2048
+node.set["nginx"]["variables_hash_bucket_size"] = 512
+node.set["nginx"]["client_max_body_size"] = "10m"
 
 ####################
 # Mysql settings
@@ -87,6 +90,6 @@ include_recipe "wrapper_apache2::mod_rpaf"
 include_recipe "apache2-mpm-itk::default"
 
 include_recipe "nginx"
-include_recipe "wrapper_nginx::setup_reverse_proxy_cache"
+include_recipe "nginx::setup_reverse_proxy_cache"
 
 include_recipe "app_containers"

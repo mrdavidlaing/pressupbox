@@ -14,7 +14,7 @@
 
 define :nginx_add_vhosts_in_data do
 
-  Chef::Log.info "Setting up vhost all vhosts in /data/www/vhost/*/nginx/*.conf"
+  Chef::Log.info "Setting up vhost all vhosts in /data/*/etc/nginx/*.conf"
 
 
   template "#{node[:nginx][:dir]}/sites-available/add-vhosts-in-data.conf" do

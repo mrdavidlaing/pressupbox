@@ -43,6 +43,8 @@ Vagrant::Config.run do |config|
     chef.json.merge!({
                         
                     :set_fqdn => "pressupbox-test",
+                    :fqdn => "pressupbox-test",
+                    :domain => "pressup.me",
                     :mysql => {
                       "server_root_password" => "coffeebeans",
                       "server_repl_password" => "coffeebeans",

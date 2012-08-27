@@ -5,7 +5,7 @@ daemon off;
 <% end -%>
 
 error_log  <%= node[:nginx][:log_dir] %>/error.log;
-pid        /var/run/nginx.pid;
+pid        <%= node['nginx']['pid'] %>;
 
 events {
   worker_connections  <%= node[:nginx][:worker_connections] %>;
@@ -15,9 +15,11 @@ http {
   include       <%= node[:nginx][:dir] %>/mime.types;
   default_type  application/octet-stream;
 
-  index index.html index.php;
- 
-  access_log	<%= node[:nginx][:log_dir] %>/access.log;
+  index index.html;
+  
+   <% unless node['nginx']['disable_access_log'] -%>
+  access_log  <%= node['nginx']['log_dir'] %>/access.log;
+  <% end %>
 
   sendfile on;
   tcp_nopush on;
