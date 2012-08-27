@@ -50,6 +50,12 @@ node.set["nginx"]["variables_hash_bucket_size"] = 512
 node.set["nginx"]["client_max_body_size"] = "10m"
 
 ####################
+# PHP settings
+####################
+node.set["php"]["post_max_size"] = "10M"
+node.set["php"]["upload_max_filesize"] = "12M"       #must be bigger than upload_max_filesize
+
+####################
 # Mysql settings
 ####################
 node.set["mysql"]["bind_address"] = "127.0.0.1"
@@ -79,9 +85,9 @@ include_recipe "multitail"
 include_recipe "postfix"
 include_recipe "wrapper_mysql::server"
 
-include_recipe "wrapper_php"
-include_recipe "wrapper_php::module_apc"
-include_recipe "wrapper_php::module_mysql"
+include_recipe "php"
+include_recipe "php::module_apc"
+include_recipe "php::module_mysql"
 
 include_recipe "wrapper_apache2::default"
 include_recipe "wrapper_apache2::mod_php5"
