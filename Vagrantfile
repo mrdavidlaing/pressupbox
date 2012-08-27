@@ -23,7 +23,7 @@ Vagrant::Config.run do |config|
 
   config.vm.provision :chef_solo do |chef|
 
-    chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
+    chef.cookbooks_path = ["cookbooks", "cookbooks-overrides"]
     chef.data_bags_path = ["data_bags"]
     chef.log_level      = :debug
 

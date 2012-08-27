@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 #^syntax detection
 
+#######################
+# Community cookbooks #
+#######################
 site 'http://community.opscode.com/api/v1'
 
 cookbook 'apache2', '1.1.12'
@@ -14,8 +17,28 @@ cookbook 'php', '1.0.2'
 cookbook 'nginx', '0.101.6'
 cookbook 'logrotate', '0.8.2'
 
-cookbook 'apt',
-  :git => 'https://github.com/mrdavidlaing/apt'
+##################################################
+# Community cookbooks with pending pull requests #
+##################################################
+cookbook 'apt', :git => 'https://github.com/mrdavidlaing/apt'
+
+####################
+# Custom cookbooks #
+####################
+
+cookbook 'apache2-mpm-itk', 	:path => 'cookbooks-sources'
+cookbook 'app_containers',  	:path => 'cookbooks-sources'
+cookbook 'bash_for_hipsters', 	:path => 'cookbooks-sources'
+cookbook 'htop', 				:path => 'cookbooks-sources'
+cookbook 'multitail', 			:path => 'cookbooks-sources'
+cookbook 'pressupbox', 			:path => 'cookbooks-sources'
+cookbook 'unarchivers', 		:path => 'cookbooks-sources'
+cookbook 'wrapper_apache2', 	:path => 'cookbooks-sources'
+cookbook 'wrapper_mysql', 		:path => 'cookbooks-sources'
+
+###########
+# Samples #
+###########
 
 #cookbook 'user',
 #  :git => 'https://github.com/mrdavidlaing/chef-user',
