@@ -33,7 +33,6 @@ cookbook 'htop', 				:path => 'cookbooks-sources'
 cookbook 'multitail', 			:path => 'cookbooks-sources'
 cookbook 'pressupbox', 			:path => 'cookbooks-sources'
 cookbook 'unarchivers', 		:path => 'cookbooks-sources'
-cookbook 'wrapper_apache2', 	:path => 'cookbooks-sources'
 
 ###########
 # Samples #

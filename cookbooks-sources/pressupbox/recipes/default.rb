@@ -41,6 +41,9 @@ node.set["apache"]["prefork"]["maxspareservers"] = 10 # Apache will kill servers
 
 node.set["apache"]["listen_ports"] = [ "81" ]
 
+node.set["apache"]["php5"]["upload_max_filesize"] = "10M"
+node.set["apache"]["php5"]["post_max_size"] = "12M"       #must be bigger than upload_max_filesize
+
 ####################
 # Nginx settings
 ####################
@@ -48,12 +51,6 @@ node.set["nginx"]["server_names_hash_bucket_size"] = 2048
 node.set["nginx"]["variables_hash_max_size"] = 2048
 node.set["nginx"]["variables_hash_bucket_size"] = 512
 node.set["nginx"]["client_max_body_size"] = "10m"
-
-####################
-# PHP settings
-####################
-node.set["php"]["post_max_size"] = "10M"
-node.set["php"]["upload_max_filesize"] = "12M"       #must be bigger than upload_max_filesize
 
 ####################
 # Mysql settings
@@ -89,9 +86,12 @@ include_recipe "php"
 include_recipe "php::module_apc"
 include_recipe "php::module_mysql"
 
-include_recipe "wrapper_apache2::default"
-include_recipe "wrapper_apache2::mod_php5"
-include_recipe "wrapper_apache2::mod_rpaf"
+include_recipe "apache2::default"
+include_recipe "apache2::envvars"
+include_recipe "apache2::mod_rewrite"
+include_recipe "apache2::mod_php5"
+include_recipe "apache2::mod_php5_max_upload_filesize"
+include_recipe "apache2::mod_rpaf"
 
 include_recipe "apache2-mpm-itk::default"
 

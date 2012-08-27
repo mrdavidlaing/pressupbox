@@ -62,8 +62,11 @@ template "/etc/apache2-mpm-itk/ports.conf" do
 end
 
 %w{httpd.conf magic}.each do |conf|
-  link "/etc/apache2-mpm-itk/#{conf}" do
-    to "/etc/apache2/#{conf}"
+  bash "copy #{conf} from main apache2" do
+    user "root"
+    code <<-EOH
+    cp /etc/apache2/#{conf} /etc/apache2-mpm-itk/#{conf}
+    EOH
   end
 end
 

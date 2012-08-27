@@ -1,5 +1,5 @@
 maintainer        "David Laing"
 maintainer_email  "david@davidlaing.com"
 description       "Under Ubuntu 12.04, this creates a secondary apache service, running the mpm-itk worker"
-version           "0.1.0"
+version           "0.1.1"
 depends			  "apache2"
