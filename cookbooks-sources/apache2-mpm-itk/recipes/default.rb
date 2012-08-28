@@ -65,7 +65,7 @@ end
   bash "copy #{conf} from main apache2" do
     user "root"
     code <<-EOH
-    cp /etc/apache2/#{conf} /etc/apache2-mpm-itk/#{conf}
+    cp --force /etc/apache2/#{conf} /etc/apache2-mpm-itk/#{conf}
     EOH
   end
 end
