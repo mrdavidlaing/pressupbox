@@ -1,13 +1,13 @@
 #!/usr/bin/env rake
 require 'rake/testtask'
+require 'pty'
 
 STDOUT.sync = true
 current_dir = File.dirname(__FILE__)
 
-def get_vagrant
-  require 'vagrant'
-  Vagrant::Environment.new(:ui_class => ::Vagrant::UI::Colored)
-end
+task :default => [ 'test', 'foodcritic' ]
+
+###################################
 
 namespace :vagrant do
 
@@ -27,21 +27,25 @@ namespace :vagrant do
 
 end
 
+####################################
+
 namespace :solo do
 
   desc "Runs chef-solo on current machine"
   task :converge => [:foodcritic] do
     puts "Starting Chef run..."
-    puts `chef-solo -c #{current_dir}/solo.rb`
+    exec "chef-solo -c #{current_dir}/solo.rb"
   end
 
 end
 
+###################################
+
 desc "Copy all chef defined in ./Cheffile into /cookbooks ready for chef run"
 task :build_cookbooks do
 	puts "Building cookbooks using ./Cheffile ...."
-	puts `librarian-chef update` 
-	puts `librarian-chef show` 
+	exec "librarian-chef update" 
+	exec "librarian-chef show" 
 end
 
 Rake::TestTask.new do |t|
@@ -53,10 +57,27 @@ end
 desc "Runs foodcritic linter"
 task :foodcritic => [:build_cookbooks] do
   if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
-    sh "foodcritic -f any -f ~FC005 cookbooks-sources/pressupbox cookbooks-sources/app_containers"
+    exec "foodcritic -f any -f ~FC005 cookbooks-sources/pressupbox cookbooks-sources/app_containers"
   else
     puts "WARN: foodcritic run is skipped as Ruby #{RUBY_VERSION} is < 1.9.2."
   end
 end
 
-task :default => [ 'test', 'foodcritic' ]
+
+###########################
+
+def exec(cmd)
+  PTY.spawn( cmd ) do |stdin, stdout, pid|
+    begin
+      stdin.each { |line| print line }
+    rescue Errno::EIO
+    end
+  end
+rescue PTY::ChildExited
+  puts "#{cmd} - child process exited!"
+end
+
+def get_vagrant
+  require 'vagrant'
+  Vagrant::Environment.new(:ui_class => ::Vagrant::UI::Colored)
+end
