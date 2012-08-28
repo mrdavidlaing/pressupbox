@@ -41,7 +41,7 @@ GIT
 PATH
   remote: cookbooks-sources
   specs:
-    apache2-mpm-itk (0.1.0)
+    apache2-mpm-itk (0.1.1)
       apache2 (>= 0.0.0)
     app_containers (0.17.2)
       apache2 (>= 0.0.0)
