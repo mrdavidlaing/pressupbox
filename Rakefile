@@ -1,6 +1,5 @@
 #!/usr/bin/env rake
 require 'rake/testtask'
-require 'pty'
 
 STDOUT.sync = true
 current_dir = File.dirname(__FILE__)
@@ -65,15 +64,20 @@ end
 
 
 ###########################
-
 def exec(cmd)
-  PTY.spawn( cmd ) do |stdin, stdout, pid|
-    begin
-      stdin.each { |line| print line }
-    rescue Errno::EIO
+  is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+  if is_windows then 
+    puts `#{cmd}`
+    else
+      require 'pty'
+    PTY.spawn( cmd ) do |stdin, stdout, pid|
+      begin
+        stdin.each { |line| print line }
+      rescue Errno::EIO
+      end
     end
   end
-rescue PTY::ChildExited
+rescue 
   puts "#{cmd} - child process exited!"
 end
 
