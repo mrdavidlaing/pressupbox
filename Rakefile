@@ -11,7 +11,7 @@ task :default => [ 'test', 'foodcritic' ]
 namespace :vagrant do
 
   desc "Destroys & recreates vagrant box"
-  task :rebuild => [:foodcritic] do
+  task :rebuild => [:build_cookbooks, :foodcritic] do
     puts "Recreating vagrant box..."
     vagrant = get_vagrant
     vagrant.cli("destroy", "--force")
@@ -19,7 +19,7 @@ namespace :vagrant do
   end
 
   desc "Re-runs chef-solo on vagrant box"
-  task :converge => [:foodcritic] do
+  task :converge => [:build_cookbooks, :foodcritic] do
     puts "Starting Chef run on vagrant box..."
     get_vagrant.cli("provision")
   end
@@ -31,9 +31,9 @@ end
 namespace :solo do
 
   desc "Runs chef-solo on current machine"
-  task :converge => [:foodcritic] do
+  task :converge => [:build_cookbooks, :foodcritic] do
     puts "Starting Chef run..."
-    exec "chef-solo -c #{current_dir}/solo.rb"
+    pty_exec "chef-solo -c #{current_dir}/solo.rb"
   end
 
 end
@@ -43,8 +43,8 @@ end
 desc "Copy all chef defined in ./Cheffile into /cookbooks ready for chef run"
 task :build_cookbooks do
 	puts "Building cookbooks using ./Cheffile ...."
-	exec "librarian-chef update" 
-	exec "librarian-chef show" 
+	pty_exec "librarian-chef update" 
+	pty_exec "librarian-chef show" 
 end
 
 Rake::TestTask.new do |t|
@@ -56,7 +56,7 @@ end
 desc "Runs foodcritic linter"
 task :foodcritic => [:build_cookbooks] do
   if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
-    exec "foodcritic -f any -f ~FC005 cookbooks-sources/pressupbox cookbooks-sources/app_containers"
+    pty_exec "foodcritic -f any -f ~FC005 cookbooks-sources/pressupbox cookbooks-sources/app_containers"
   else
     puts "WARN: foodcritic run is skipped as Ruby #{RUBY_VERSION} is < 1.9.2."
   end
@@ -64,7 +64,7 @@ end
 
 
 ###########################
-def exec(cmd)
+def pty_exec(cmd)
   is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
   if is_windows then 
     puts `#{cmd}`
