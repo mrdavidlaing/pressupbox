@@ -128,8 +128,8 @@ template "/etc/apache2-mpm-itk/envvars" do
 end
 
 service "apache2-mpm-itk" do
-  supports :status => true, :restart => true, :reload => true
-  action [ :enable, :restart ]
+  supports :status => true, :stop => true, :start => true
+  action [ :enable, :stop, :start ]
 end
 
 

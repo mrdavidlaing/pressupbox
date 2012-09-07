@@ -168,10 +168,10 @@ Include mods-enabled/*.conf
 <% end %>
 
 # Include all the user configurations:
-Include httpd.conf
+Include <%= node['apache2-mpm-itk']['dir'] %>/httpd.conf
 
 # Include ports listing
-Include ports.conf
+Include <%= node['apache2-mpm-itk']['dir'] %>/ports.conf
 
 #
 # The following directives define some format nicknames for use with
@@ -249,7 +249,7 @@ LogFormat "%{User-agent}i" agent
 
 
 # Include generic snippets of statements
-Include conf.d/
+Include <%= node['apache2-mpm-itk']['dir'] %>/conf.d/
 
 # Include the virtual host configurations:
-Include sites-enabled/
+Include <%= node['apache2-mpm-itk']['dir'] %>/sites-enabled/
