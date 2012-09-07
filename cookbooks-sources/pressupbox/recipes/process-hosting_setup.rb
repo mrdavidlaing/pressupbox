@@ -21,6 +21,9 @@ hosting_setup_files_yaml = recursive_find("#{node['home_dir']}/www", 'hosting_se
 hosting_setup_files_json = recursive_find("#{node['home_dir']}/www", 'hosting_setup.pressupbox.json') #json config files for backwards compatibility.  JSON is a valid subset of YAML
 
 hosting_setup_files = hosting_setup_files_json | hosting_setup_files_yaml
+
+wp_cli_sites = []
+
 hosting_setup_files.each do |hosting_setup_file|
 
   Chef::Log.info "Processing #{hosting_setup_file}"
@@ -45,6 +48,8 @@ hosting_setup_files.each do |hosting_setup_file|
         command "sudo -H mysql --execute \"CREATE DATABASE IF NOT EXISTS \\`#{site['db_name']}\\`;\""
         action :run
       end
+      #Store DB => webroot map for wp-cli config
+      wp_cli_sites << {:db_name => site['db_name'], :web_root => "#{node['home_dir']}/www/#{site['web_root']}" }
     end
 
     # =========================
@@ -127,6 +132,24 @@ hosting_setup_files.each do |hosting_setup_file|
 
   end #hosting_setup_conf['sites']
 end #hosting_setup_files
+
+# =========================
+#  wp-cli config
+# =========================
+directory "#{node['home_dir']}/.wp-cli" do
+  action :create
+  owner node['admin_user']
+  group 'root'
+  mode 0700
+end
+template "#{node['home_dir']}/.wp-cli/set_DB_env_vars.php" do
+  source "set_DB_env_vars.php.erb"
+  action :create
+  owner admin_user
+  group 'root'
+  variables(:db_user => node['admin_user'], :db_password => node['mysql_password'], :sites => wp_cli_sites)
+  mode 0644
+end
 
 service "apache2-mpm-itk" do
  action [:restart ]

@@ -1,0 +1,12 @@
+<?php
+$_SERVER["DB_USER"]="<%= @db_user %>";
+$_SERVER["DB_PASSWORD"]="<%= @db_password %>";
+
+//Set DB_NAME based on folder wp is being executed from
+<% @sites.each do |site| 
+	site[:web_root] << '/' unless site[:web_root].end_with?('/') -%>
+if (getcwd()=="<%= site[:web_root] %>") {
+	$_SERVER["DB_NAME"]="<%= site[:db_name] %>";
+}	
+<% end -%>
+
