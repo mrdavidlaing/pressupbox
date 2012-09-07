@@ -27,10 +27,9 @@ Vagrant::Config.run do |config|
     chef.data_bags_path = ["data_bags"]
     chef.log_level      = :debug
 
-    #chef.add_recipe     "pressupbox::default"
+    chef.add_recipe     "pressupbox::default"
     
     #recipes under development
-    chef.add_recipe      "wp-cli::default"
     #chef.add_recipe     "app_containers::default"
     #chef.add_recipe     "apache2-mpm-itk::default"
 

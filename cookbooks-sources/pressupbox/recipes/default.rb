@@ -98,4 +98,5 @@ include_recipe "apache2-mpm-itk::default"
 include_recipe "nginx"
 include_recipe "nginx::setup_reverse_proxy_cache"
 
+include_recipe "wp-cli"
 include_recipe "app_containers"
