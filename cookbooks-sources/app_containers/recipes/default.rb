@@ -75,7 +75,8 @@ apps.each do |app_name|
     group "root"
     variables(:keys => keys)
     mode 0600
-  end  
+  end
+  
 
   # copy in the skeleton structure
   remote_directory home_dir do
@@ -181,6 +182,24 @@ apps.each do |app_name|
     ) 
     mode 0755
   end
+
+  file "#{home_dir}/bin/wp-init" do
+    action :create
+    owner 'root'
+    group 'root'
+    mode 0755
+    content <<-EOH
+wp core download
+wp core config --dbname=database_name_here --dbuser=username_here --dbpass=password_here
+sed -i "s/'database_name_here'/\\$_SERVER\\['DB_NAME'\\]/" wp-config.php 
+sed -i "s/'username_here'/\\$_SERVER\\['DB_USERNAME'\\]/" wp-config.php 
+sed -i "s/'password_here'/\\$_SERVER\\['DB_PASSWORD'\\]/" wp-config.php
+echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+echo "WP configured.  Browse to the site to complete installation"
+echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+EOH
+  end
+
 
   ##############################
   # Ensure logs are rotated daily
