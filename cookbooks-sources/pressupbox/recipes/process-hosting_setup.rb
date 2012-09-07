@@ -24,6 +24,17 @@ hosting_setup_files = hosting_setup_files_json | hosting_setup_files_yaml
 
 wp_cli_sites = []
 
+bash "clean out existing apache2 & nginx conf files prior to regenerating them" do
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  rm -f #{node['home_dir']}/etc/apache2/sites-enabled/*
+  rm -f #{node['home_dir']}/etc/apache2/sites-available/*
+  rm -f #{node['home_dir']}/etc/nginx/sites-enabled/*
+  rm -f #{node['home_dir']}/etc/nginx/sites-available/*
+  EOH
+end
+
 hosting_setup_files.each do |hosting_setup_file|
 
   Chef::Log.info "Processing #{hosting_setup_file}"
