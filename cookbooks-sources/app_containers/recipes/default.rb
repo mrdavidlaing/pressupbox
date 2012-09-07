@@ -75,29 +75,7 @@ apps.each do |app_name|
     group "root"
     variables(:keys => keys)
     mode 0600
-  end
-
-  ############################
-  # Cleanup from old versions
-  ############################
-  bash "cleanup app_container apache2 instance" do
-    code <<-EOH
-    rm -rf #{home_dir}/etc/apache2/{conf.d,mods-enabled,mods-available}
-    rm -f #{home_dir}/etc/apache2/sites-{available,enabled}/*_admin
-    rm -f #{home_dir}/etc/apache2/{.DS_Store,apache2.conf,envvars,httpd.conf,magic,ports.conf} 
-    rm -f #{home_dir}/bin/*-#{app_name}
-    rm -f /etc/apache2-#{app_name}
-    update-rc.d /etc/init.d/apache2-#{app_name} remove
-    rm -f /etc/init.d/apache2-#{app_name}
-    EOH
-  end
-
-  bash "cleanup old embedded chef-solo" do
-    code <<-EOH
-    rm -rf #{home_dir}/var/chef-solo
-    EOH
-  end
-      
+  end  
 
   # copy in the skeleton structure
   remote_directory home_dir do
