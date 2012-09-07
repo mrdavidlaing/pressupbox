@@ -33,6 +33,7 @@ cookbook 'htop', 				:path => 'cookbooks-sources'
 cookbook 'multitail', 			:path => 'cookbooks-sources'
 cookbook 'pressupbox', 			:path => 'cookbooks-sources'
 cookbook 'unarchivers', 		:path => 'cookbooks-sources'
+cookbook 'wp-cli', 				:path => 'cookbooks-sources'
 
 ###########
 # Samples #

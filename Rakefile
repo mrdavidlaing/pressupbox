@@ -56,7 +56,7 @@ end
 desc "Runs foodcritic linter"
 task :foodcritic => [:build_cookbooks] do
   if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
-    pty_exec "foodcritic -f any -f ~FC005 cookbooks-sources/pressupbox cookbooks-sources/app_containers"
+    pty_exec "foodcritic -f any -f ~FC005 cookbooks-sources"
   else
     puts "WARN: foodcritic run is skipped as Ruby #{RUBY_VERSION} is < 1.9.2."
   end
