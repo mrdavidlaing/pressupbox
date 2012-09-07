@@ -142,10 +142,17 @@ directory "#{node['home_dir']}/.wp-cli" do
   group 'root'
   mode 0700
 end
+file "#{node['home_dir']}/.wp-cli/wp-cli.ini" do
+  action :create
+  owner node['admin_user']
+  group 'root'
+  mode 0700
+  content "auto_prepend_file = #{node['home_dir']}/.wp-cli/set_DB_env_vars.php"
+end
 template "#{node['home_dir']}/.wp-cli/set_DB_env_vars.php" do
   source "set_DB_env_vars.php.erb"
   action :create
-  owner admin_user
+  owner node['admin_user']
   group 'root'
   variables(:db_user => node['admin_user'], :db_password => node['mysql_password'], :sites => wp_cli_sites)
   mode 0644
