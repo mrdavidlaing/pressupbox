@@ -1,4 +1,6 @@
+current_dir = File.dirname(__FILE__)
+
 file_cache_path "/var/chef-solo"
-cookbook_path "/root/pressupbox/cookbooks"
-data_bag_path "/root/pressupbox/data_bags"
-json_attribs "/root/pressupbox/node.json"
+cookbook_path ["#{current_dir}/cookbooks","#{current_dir}/cookbooks-overrides"]
+data_bag_path "#{current_dir}/data_bags"
+json_attribs "#{current_dir}/node.json"
