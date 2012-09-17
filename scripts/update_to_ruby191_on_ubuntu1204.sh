@@ -24,3 +24,6 @@ echo -e "#Ensure gems are in path\nexport PATH=\$PATH:/var/lib/gems/1.9.1/bin/" 
 # now try
 echo "Current default ruby version is:"
 ruby --version
+
+echo "--------DONE------------"
+echo "NB!  You must log off and then on again to ensure your environment is configured correctly"
