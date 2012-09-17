@@ -18,6 +18,9 @@ sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.9.1 400 \
 # /usr/bin/irb, /usr/bin/ri and man (1) ruby
 sudo update-alternatives --config ruby || true
 sudo update-alternatives --config gem  || true
- 
+
+echo -e "#Ensure gems are in path\nexport PATH=\$PATH:/var/lib/gems/1.9.1/bin/" >> /etc/profile
+
 # now try
+echo "Current default ruby version is:"
 ruby --version
