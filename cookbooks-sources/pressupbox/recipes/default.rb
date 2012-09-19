@@ -60,7 +60,9 @@ node.set["mysql"]["bind_address"] = "127.0.0.1"
 ####################
 # Postfix settings
 ####################
-node.set["postfix"]["mydomain"] = node["domain"]
+#force postfix to use the hostname that will get set to node["set_fqdn"] by the hostname recipe
+node.set['postfix']['myhostname'] = node["set_fqdn"]  
+node.set['postfix']['mydomain']   = /^(?<hostname>[^.]+)\.(?<domain>.+)/.match(node["set_fqdn"])[:domain]
 
 ####################
 # Time
