@@ -192,7 +192,7 @@ apps.each do |app_name|
 wp core download
 wp core config --dbname=database_name_here --dbuser=username_here --dbpass=password_here
 sed -i "s/'database_name_here'/\\$_SERVER\\['DB_NAME'\\]/" wp-config.php 
-sed -i "s/'username_here'/\\$_SERVER\\['DB_USERNAME'\\]/" wp-config.php 
+sed -i "s/'username_here'/\\$_SERVER\\['DB_USER'\\]/" wp-config.php 
 sed -i "s/'password_here'/\\$_SERVER\\['DB_PASSWORD'\\]/" wp-config.php
 echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "WP configured.  Browse to the site to complete installation"
