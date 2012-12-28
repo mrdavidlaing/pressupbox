@@ -61,7 +61,7 @@ if memory_total <= 1000
 	node.set["mysql"]["tunable"]["key_buffer"] = "16M"
 	node.set["mysql"]["tunable"]["thread_stack"] = "128K"
 	node.set["mysql"]["tunable"]["innodb_buffer_pool_size"] = "16M"
-else[
+else
 	node.set["mysql"]["tunable"]["key_buffer"] = "256M"
 	node.set["mysql"]["tunable"]["thread_stack"] = "256K"
 	node.set["mysql"]["tunable"]["innodb_buffer_pool_size"] = "128M"
