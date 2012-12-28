@@ -56,6 +56,16 @@ node.set["nginx"]["client_max_body_size"] = "10m"
 # Mysql settings
 ####################
 node.set["mysql"]["bind_address"] = "127.0.0.1"
+#Machines with less than 1GB RAM should use low memory settings for MySQL
+if memory_total <= 1000
+	node.set["mysql"]["tunable"]["key_buffer"] = "16M"
+	node.set["mysql"]["tunable"]["thread_stack"] = "128K"
+	node.set["mysql"]["tunable"]["innodb_buffer_pool_size"] = "16M"
+else[
+	node.set["mysql"]["tunable"]["key_buffer"] = "256M"
+	node.set["mysql"]["tunable"]["thread_stack"] = "256K"
+	node.set["mysql"]["tunable"]["innodb_buffer_pool_size"] = "128M"
+end
 
 ####################
 # Postfix settings
