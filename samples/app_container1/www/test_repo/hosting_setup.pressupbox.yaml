@@ -12,10 +12,10 @@ sites:
     server_name: "default.pressupbox-test"
     web_root: "test_repo/default"
   - <<: *defaults
-    server_name: "wordpress"
+    server_name: "wordpress.pressupbox-test"
     aliases: 
-      - *.wordpress.pressupbox-test
-    web_root: "test_repo/default"
+      - "*.wordpress.pressupbox-test"
+    web_root: "test_repo/wordpress"
     db_name: "app_container1_wordpress"
     upload_folders: #relative to www_root
       - "wp-content/uploads"
@@ -24,10 +24,10 @@ sites:
   - <<: *defaults
     server_name: "wordpressmu.pressupbox-test"
     aliases: 
-      "*.wordpressmu.pressupbox-test"
+      - "*.wordpressmu.pressupbox-test"
     web_root: "test_repo/wordpressmu"
   - <<: *defaults
     server_name: "drupal.pressupbox-test"
     aliases: 
-      "*.drupal.pressupbox-test"
+      - "*.drupal.pressupbox-test"
     web_root: "test_repo/drupal"

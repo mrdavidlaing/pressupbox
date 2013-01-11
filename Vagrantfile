@@ -4,10 +4,6 @@ Vagrant::Config.run do |config|
   config.vm.box     = "opscode-ubuntu-12.04"
   config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-ubuntu-12.04.box"
 
-  # Ubuntu 12.04 x64
-  #config.vm.box     = "precise64"
-  #config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-
   config.vm.forward_port 3306, 13306 #MySQL
 
   config.vm.customize ["modifyvm", :id, "--memory", "512"]
@@ -16,10 +12,13 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "33.33.33.10"
 
   use_nfs = !(Vagrant::Util::Platform.windows?)
-  # config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", # "samples/app_container1/www/test_repo", :nfs => use_nfs)
-  # config.vm.share_folder("app_container1-forsitethemes", "/data/app_containers/forsitethemes/www/forsitethemes", # "/Users/mrdavidlaing/Projects/defries/forsitethemes", :nfs => use_nfs)
-  # config.vm.share_folder("app_container1-cityindex", "/data/app_containers/cityindex/www/labs.cityindex.com", # "/Users/mrdavidlaing/Projects/cityindex/labs.cityindex.com", :nfs => use_nfs)
+  config.vm.share_folder("app_container1-www", "/data/app_containers/app_container1/www/test_repo", "samples/app_container1/www/test_repo", :nfs => use_nfs)
+  # config.vm.share_folder("app_container1-forsitethemes", "/data/app_containers/forsitethemes/www/forsitethemes", "/Users/mrdavidlaing/Projects/defries/forsitethemes", :nfs => use_nfs)
+  # config.vm.share_folder("app_container1-cityindex", "/data/app_containers/cityindex/www/labs.cityindex.com", "/Users/mrdavidlaing/Projects/cityindex/labs.cityindex.com", :nfs => use_nfs)
 
+  # config.vm.share_folder("app_container1-pressupbox-api", "/data/app_containers/app_container1/www/pressupbox-api",  "/Users/mrdavidlaing/Projects/mrdavidlaing/pressupbox-api", :nfs => false)
+
+  config.vm.provision :shell, :inline => "sudo apt-get update && sudo apt-get install nfs-common"
 
   config.vm.provision :chef_solo do |chef|
 
@@ -42,9 +41,7 @@ Vagrant::Config.run do |config|
 
     chef.json.merge!({
                         
-                    :set_fqdn => "pressupbox-test",
-                    :fqdn => "pressupbox-test",
-                    :domain => "pressup.me",
+                    :set_fqdn => "testbox.pressupbox.dev",
                     :mysql => {
                       "server_root_password" => "coffeebeans",
                       "server_repl_password" => "coffeebeans",
