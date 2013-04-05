@@ -19,7 +19,7 @@ class Chef::Recipe
   include MemoryAllocation
 end
 
-APACHE_PROCESS_MEMORY   = 25                    #average size of resident memory used per apache process
+APACHE_PROCESS_MEMORY   = 65                    #average size of resident memory used per apache process
 memory_total = get_available_memory(node) 
 memory_used = {}
 memory_used['misc_and_cache'] = memory_total * 0.3 
