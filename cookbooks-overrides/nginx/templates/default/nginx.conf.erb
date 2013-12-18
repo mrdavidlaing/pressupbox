@@ -24,6 +24,7 @@ http {
   sendfile on;
   tcp_nopush on;
   tcp_nodelay on;
+  server_tokens off;
 
   <% if node[:nginx][:keepalive] == "on" %>
   keepalive_timeout  <%= node[:nginx][:keepalive_timeout] %>;
