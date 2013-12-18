@@ -69,8 +69,12 @@ hosting_setup_files.each do |hosting_setup_file|
     if site.has_key?('admin_ips') then admin_ips = site['admin_ips'] else admin_ips = ["127.0.0.1"] end
     if site.has_key?('upload_folders') then upload_folders = site['upload_folders'] else upload_folders = [] end
     if site.has_key?('aliases') then aliases = site['aliases'] else aliases = [] end
-    vhost_params = {  
-      :host_name => node['host_name'], 
+    if site.has_key?('ssl_cert') then ssl_cert = site['ssl_cert'] else ssl_cert = '' end
+    if site.has_key?('ssl_cert_domain_key') then ssl_cert_domain_key = site['ssl_cert_domain_key'] else ssl_cert_domain_key = '' end
+    vhost_params = {
+      :ssl_cert => ssl_cert,
+      :ssl_cert_domain_key => ssl_cert_domain_key,
+      :host_name => node['host_name'],
       :server_name => site['server_name'],
       :aliases => aliases, 
       :admin_ips => admin_ips,
