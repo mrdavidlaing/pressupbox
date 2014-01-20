@@ -106,6 +106,7 @@ include_recipe "apache2::envvars"
 include_recipe "apache2::mod_rewrite"
 include_recipe "apache2::mod_php5"
 include_recipe "apache2::mod_php5_max_upload_filesize"
+include_recipe "apache2::apache2_conf_security"
 include_recipe "apache2::mod_rpaf"
 
 include_recipe "apache2-mpm-itk::default"
