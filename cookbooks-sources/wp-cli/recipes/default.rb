@@ -16,7 +16,7 @@ end
 
 git "/opt/wp-cli" do
   repository "git://github.com/wp-cli/wp-cli.git"
-  reference "master"
+  reference "v0.10.0"
   enable_submodules true
   action :sync
   user "root"
