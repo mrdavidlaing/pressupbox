@@ -35,9 +35,7 @@ server {
   ssl_prefer_server_ciphers on;
   ssl_certificate <%= @params[:ssl_cert] %>;
   ssl_certificate_key <%= @params[:ssl_cert_domain_key] %>;
-  if ($scheme = http) {
-    return 301 https://$server_name$request_uri;
-  }
+
   proxy_set_header X-Forwarded-Proto $scheme;
   add_header Front-End-Https on;
   <%end %>
