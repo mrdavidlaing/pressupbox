@@ -4,29 +4,19 @@
 #
 # Copyright 2012, David Laing
 
-include_recipe "git::default"
-
-directory "/opt/wp-cli" do
-  mode "0775"
-  owner "root"
-  group "root"
-  action :create
-  recursive true
-end
-
-git "/opt/wp-cli" do
-  repository "git://github.com/wp-cli/wp-cli.git"
-  reference "v0.10.0"
-  enable_submodules true
-  action :sync
+bash "download wp-cli 0.15.1" do
   user "root"
-  group "root"
+  cwd "/tmp"
+  code <<-EOH
+  wget https://github.com/wp-cli/builds/raw/1d252eadc353da8e165f49e8f638e75e694ad92c/phar/wp-cli.phar
+  chmod +x wp-cli.phar
+  sudo mv wp-cli.phar /usr/bin/wp
+  EOH
 end
 
-bash "init wp-cli" do
-	user "root"
-	cwd "/opt/wp-cli"
-	code <<-EOH
-	utils/dev-build
-	EOH
+bash "remove old install in /opt/wp-cli (if exists)" do
+  user "root"
+  code <<-EOH
+  rm -rf /opt/wp-cli
+  EOH
 end

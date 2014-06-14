@@ -157,12 +157,15 @@ directory "#{node['home_dir']}/.wp-cli" do
   group 'root'
   mode 0700
 end
-file "#{node['home_dir']}/.wp-cli/wp-cli.ini" do
+file "#{node['home_dir']}/.wp-cli/config.yml" do
   action :create
   owner node['admin_user']
   group 'root'
   mode 0700
-  content "auto_prepend_file = #{node['home_dir']}/.wp-cli/set_DB_env_vars.php"
+  content <<-EOH
+require:
+  - #{node['home_dir']}/.wp-cli/set_DB_env_vars.php
+EOH
 end
 template "#{node['home_dir']}/.wp-cli/set_DB_env_vars.php" do
   source "set_DB_env_vars.php.erb"
@@ -172,6 +175,15 @@ template "#{node['home_dir']}/.wp-cli/set_DB_env_vars.php" do
   variables(:db_user => node['admin_user'], :db_password => node['mysql_password'], :sites => wp_cli_sites)
   mode 0644
 end
+bash "remove old .wp-cli/wp-cli.ini (if exists)" do
+  user "root"
+  code <<-EOH
+  rm -rf #{node['home_dir']}/.wp-cli/wp-cli.ini
+EOH
+end
+# =========================
+#  END wp-cli config
+# =========================
 
 service "apache2-mpm-itk" do
  action [:restart ]
