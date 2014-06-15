@@ -16,6 +16,7 @@ cookbook 'hostname', '0.0.2'
 cookbook 'php', '1.0.2'
 cookbook 'nginx', '1.0.0'
 cookbook 'logrotate', '0.8.2'
+cookbook 'openssl', '1.1.0'
 
 ##################################################
 # Community cookbooks with pending pull requests #
